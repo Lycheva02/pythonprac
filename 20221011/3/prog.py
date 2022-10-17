@@ -29,9 +29,9 @@ cont.append(st)
 for l in cont:
     print(l)
 
-liq_new *= h - 2
-gas_new *= h - 2
+liq_new = liquid
 volume = (h - 2) * (w - 2)
+gas_new  = volume - liq_new
 
 if gas_new >= liq_new:
     dl = 18 - len(str(gas_new)) - len(str(volume))
