@@ -1,0 +1,6 @@
+:t 5/2
+t
+:plus x y sin(x)+cos(y)
+t
+plus pi/2 0
+quit "{}; {}"

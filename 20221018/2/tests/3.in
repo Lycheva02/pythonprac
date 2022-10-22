@@ -1,0 +1,3 @@
+:pum x y z w x+y*w-z
+pum 4 12 9 60
+quit "{} -- {}"

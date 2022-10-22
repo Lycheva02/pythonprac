@@ -1,0 +1,6 @@
+:strconc x 'aaa'+x+'qkrq'
+:ko 1-1
+strconc 'QQ'
+ko
+strconc 'help'
+quit "{} :) {}"
