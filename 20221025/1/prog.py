@@ -1,31 +1,18 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
-#  prog.py
-#  
-#  Copyright 2022 Unknown <altlinux@localhost.localdomain>
-#  
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#  
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#  
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#  MA 02110-1301, USA.
-#  
-#  
+def fib(m, n):
+    x, y = 1, 1
+    if m == 0:
+        yield x
+        m += 1
+        n -= 1
+    if m == 1:
+        yield y
+        m += 1
+        n -= 1
+    for i in range(2, m):
+        x, y = y, x + y
+    for i in range(m, m + n):
+        x, y = y, x + y
+        yield y
 
-
-def main(args):
-    return 0
-
-if __name__ == '__main__':
-    import sys
-    sys.exit(main(sys.argv))
+import sys
+exec(sys.stdin.read())
