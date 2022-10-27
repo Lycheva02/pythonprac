@@ -1,0 +1,1 @@
+print(*list(slide('TRY TO READ THIS TEXT', 4)))
