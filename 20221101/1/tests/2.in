@@ -1,0 +1,10 @@
+w, a = Omnibus(), Omnibus()
+w.fd = True
+a.fd = False
+w.ert = 123
+print(w.fd, a.fd, w.ert)
+w.yui = 901290
+a.ert = 0
+print(w.fd, a.fd, w.ert, w.yui, a.ert)
+del w.ert, a.fd
+print(w.fd, w.yui, a.ert)

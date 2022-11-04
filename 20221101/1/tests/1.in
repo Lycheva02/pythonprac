@@ -1,0 +1,7 @@
+a,b,c,d = Omnibus(), Omnibus(), Omnibus(), Omnibus()
+a.raz = 13
+b.raz = False
+a.dva = b.dva = c.dva = d.tri = {'aaaaaaaaaaaa': 'vot ono'}
+print(a.raz, b.raz, a.dva, b.dva, c.dva, d.tri)
+del b.dva
+print(a.dva, b.raz)
