@@ -1,0 +1,8 @@
+f = Grange(2, 3, 57)
+print(len(f))
+t = Grange(10792, 17, 10790)
+print(bool(f), bool(t))
+print(t[6])
+print(f[13:1076], t[36:893:2], sep = "$")
+print(f)
+print(*list(t[3:742]))

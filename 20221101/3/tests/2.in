@@ -1,0 +1,4 @@
+t = Grange(840, 4, 99999)
+print(t)
+print(bool(t[9:9]))
+print(list(t[34:678:2]))
