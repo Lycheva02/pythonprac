@@ -1,0 +1,7 @@
+r = Triangle((0, 1), (0, 3), (2, 4))
+s = Triangle((1, 1), (7, 1), (4, 9))
+t = Triangle((2, 2), (3, 17), (2, 2))
+print(*(f"{n}({bool(x)}):{round(abs(x), 3)}" for n, x in zip("rst", (r, s, t))))
+print(f"{s < t=}, {r < t=}, {r < s=}")
+print(f"{s in t=}, {r in t=}, {r in s=}")
+print(f"{r & t=}, {t & r=}, {s & r=}, {s & t=}")
