@@ -1,0 +1,4 @@
+a = DivStr()
+b = DivStr("aaaaaaprivetdruzya")
+print(* b//3)
+print((a + b) % 12)

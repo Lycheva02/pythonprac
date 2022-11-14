@@ -1,0 +1,3 @@
+a = DivStr("109js109j1010j")
+print(* a//5)
+print(a % 7)

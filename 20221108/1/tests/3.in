@@ -1,0 +1,3 @@
+a = DivStr("ISRUVIL")
+print(a.lower() % 4)
+print(* a[2:5] // 1)
