@@ -1,0 +1,21 @@
+@objcount
+class C:
+    def __init__(self):
+	    self.d = {'1': 13, '2': 14}
+    def __del__(self):
+	    self.d = None
+
+a, b, c, d = C(), C(), C(), C()
+print(C.counter)
+
+@objcount
+class E:
+    def __init__(self):
+	    self.g = [3,2,1]
+    def __del__(self):
+	    self.g = None
+		
+b = E()
+print(C.counter, E.counter)
+d = 787
+print(C.counter, E.counter)

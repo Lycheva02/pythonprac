@@ -1,0 +1,15 @@
+@objcount
+class C:
+    def __init__(self, a):
+	    self.a = a
+    def __str__(self):
+	    return str(self.a)
+    def __del__(self):
+	    self.a = 100500
+	
+a, b, c = C(3), C([17,19,23]), C('ansao')
+print(C.counter)
+print(a)
+b = 1234
+print(C.counter)
+print(b)

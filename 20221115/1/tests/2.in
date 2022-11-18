@@ -1,0 +1,14 @@
+@objcount
+class C:
+    def __init__(self, a, b):
+	    self.t = a+b
+    def __str__(self):
+        return str(self.t)
+    def __del__(self):
+	    self.t = None
+		
+a = C("adpjpaodp", "oaijda")
+b = C([1,2,3], [10,9,8])
+print(b, C.counter)
+del a
+print(C.counter)
