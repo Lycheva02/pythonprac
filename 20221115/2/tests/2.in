@@ -1,0 +1,12 @@
+class B:
+    rrr = Num()
+    def __init__(self, s):
+	    self.num = s
+
+print(B(3).rrr)
+k, g = B(12), B(429)
+print(k.num, g.num, k.rrr, g.rrr)
+
+k.rrr = 12
+g.rrr = (19, 23, 745)
+print(k.rrr + g.rrr)

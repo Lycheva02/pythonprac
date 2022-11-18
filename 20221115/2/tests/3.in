@@ -1,0 +1,7 @@
+class D:
+    t = Num()
+
+a = D()
+print(a.t)
+a.t = [i*2+99 for i in range(532)]
+print(a.t)
