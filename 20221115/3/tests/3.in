@@ -1,0 +1,66 @@
+import time
+
+start1 = time.time()
+alp = Alpha()
+for i in range(1000000):
+	alp.a = i
+	alp.b = i
+	alp.c = i
+	alp.d = i
+	alp.e = i
+	alp.f = i
+	alp.g = i
+	alp.h = i
+	alp.i = i
+	alp.j = i
+	alp.k = i
+	alp.l = i
+	alp.m = i
+	alp.n = i
+	alp.o = i
+	alp.p = i
+	alp.q = i
+	alp.r = i
+	alp.s = i
+	alp.t = i
+	alp.w = i
+	alp.x = i
+	alp.y = i
+	alp.z = i
+
+a = str(alp)
+stop1 = time.time()
+print(a)
+
+start2 = time.time()
+alq = AlphaQ()
+for i in range(1000000):
+	alq.a = i
+	alq.b = i
+	alq.c = i
+	alq.d = i
+	alq.e = i
+	alq.f = i
+	alq.g = i
+	alq.h = i
+	alq.i = i
+	alq.j = i
+	alq.k = i
+	alq.l = i
+	alq.m = i
+	alq.n = i
+	alq.o = i
+	alq.p = i
+	alq.q = i
+	alq.r = i
+	alq.s = i
+	alq.t = i
+	alq.w = i
+	alq.x = i
+	alq.y = i
+	alq.z = i
+
+a = str(alq)
+stop2 = time.time()
+print(a)
+assert((stop1-start1) < (stop2-start2))

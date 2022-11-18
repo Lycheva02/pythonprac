@@ -1,0 +1,5 @@
+alp = Alpha()
+alp.i = 13
+alq = AlphaQ()
+alq.u = 14
+print(alp, alq, sep = ' ; ')

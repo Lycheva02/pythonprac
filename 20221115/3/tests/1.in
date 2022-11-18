@@ -1,0 +1,15 @@
+alp = Alpha(c=10, b=12,d=3)
+alp.k = 132
+print(alp)
+try:
+    alp.R = 17
+except AttributeError:
+    print("Molodets")
+
+alq = AlphaQ(c=10, b=12,d=3)
+alq.k = 132
+print(alq)
+try:
+    alq.R = 17
+except AttributeError:
+    print("Molodets")
