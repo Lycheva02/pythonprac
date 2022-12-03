@@ -1,0 +1,12 @@
+class C(metaclass=dump):
+    def __init__(self, s):
+	    self.s = s[-len(s)//2:] + s[:len(s)//2]
+    def reverse(self, reset=False):
+        if reset:
+            self.s = self.s[::-1]
+            return self.s
+        return self.s[::-1]
+		
+c = C('ogogoqkrq')
+d = C('aaabbb')
+print(c.reverse(), d.reverse(reset=True))

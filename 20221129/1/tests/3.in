@@ -1,0 +1,10 @@
+class near_dot(metaclass=dump):
+    def __init__(self, dot, eps):
+        self.dot = dot
+        self.eps = eps
+    def near(self, andot):
+        return (abs(andot - self.dot) <= self.eps)
+
+a = near_dot(10, 0.03)
+print(a.near(16))
+print(a.near(9.996))
