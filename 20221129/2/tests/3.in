@@ -1,0 +1,14 @@
+class C(metaclass=check):
+    A: list[str]
+    B: str
+    C: float
+
+c = C()
+c.A = ["A", "B", "oaijsoai"]
+c.B = "QQ"
+c.C = 7.17
+print(c.check_annotations())
+c.A = [1,2,3,4]
+print(c.check_annotations())
+c.C = 92
+print(c.check_annotations())

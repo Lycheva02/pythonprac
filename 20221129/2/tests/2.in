@@ -1,0 +1,12 @@
+class C(metaclass=check):
+    A: str
+    B: int
+    C: bool = True
+
+c = C()
+print(c.check_annotations())
+c.A = "AAAAAAA"
+c.B = 1892
+print(c.check_annotations())
+c.C = "No"
+print(c.check_annotations())
