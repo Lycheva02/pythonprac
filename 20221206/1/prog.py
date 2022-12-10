@@ -1,31 +1,36 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
-#  prog.py
-#  
-#  Copyright 2022 Unknown <altlinux@localhost.localdomain>
-#  
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#  
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#  
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
-#  MA 02110-1301, USA.
-#  
-#  
+import asyncio
 
+ev = asyncio.Event()
 
-def main(args):
-    return 0
+async def writer(queue, delay):
+    i = 0
+    await asyncio.sleep(delay)
+    while not ev.is_set():
+        await queue.put(str(i))
+        i += 1
+        await asyncio.sleep(delay)
+    await queue.put(None)
 
-if __name__ == '__main__':
-    import sys
-    sys.exit(main(sys.argv))
+async def stacker(queue, stack):
+    while not ev.is_set():
+        a = await queue.get()
+        await stack.put(a)
+
+async def reader(stack, count, delay):
+    for i in range(count):
+        await asyncio.sleep(delay)
+        print(await stack.get())
+    ev.set()
+
+async def main():
+    d1, d2, d3, c = map(int, input().split(','))
+    queue = asyncio.Queue()
+    stack = asyncio.LifoQueue()
+    await asyncio.gather(
+        writer(queue, d1),
+        writer(queue, d2),
+        stacker(queue, stack),
+        reader(stack, c, d3)
+    )
+
+asyncio.run(main())
