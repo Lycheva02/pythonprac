@@ -6,7 +6,7 @@ async def writer(queue, delay):
     i = 0
     await asyncio.sleep(delay)
     while not ev.is_set():
-        await queue.put(str(i))
+        await queue.put(str(f"{i}_{delay}))
         i += 1
         await asyncio.sleep(delay)
     await queue.put(None)
