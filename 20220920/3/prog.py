@@ -13,5 +13,6 @@ while i <= n+2:
         else:
             print(i, ' * ', j, ' = ', i*j, end = ' ')
         j += 1
-    print('\n')
+    if i != n + 2:
+        print()
     i += 1
