@@ -31,7 +31,7 @@ def addmon(name, x, y, hello):
          print("Replaced the old monster")
 
 def encounter(x, y):
-    print(cowsay(gamefield[x][y][1]))
+    print(cowsay(gamefield[x][y][1], cow=gamefield[x][y][0]))
      
 
 
