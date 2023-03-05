@@ -37,6 +37,7 @@ def encounter(x, y):
 
 x, y = 0, 0
 
+print("<<< Welcome to Python-MUD 0.1 >>>")
 while True:
     try:
         s = input()
