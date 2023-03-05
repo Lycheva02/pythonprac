@@ -75,7 +75,15 @@ while True:
             x,y = move(direction, x, y)
             if gamefield[x][y] != None:
                 encounter(x,y)
-        case ['addmon', name, 'hello', hello, 'hp', hp, 'coords', xstr, ystr]:
+        case ['addmon', name, *parameters]:
+            try:
+                hello = parameters[parameters.index('hello') + 1]
+                hp = parameters[parameters.index('hp') + 1]
+                coord_ind = parameters.index('coords')
+                xstr, ystr = parameters[coord_ind + 1: coord_ind + 3]
+            except:
+                print("Wrong parameters")
+                continue
             addmon(name, hello, hp, int(xstr), int(ystr))
         case ['addmon' | 'up' | 'down' | 'left' |'right', *wtv]:
             print("Invalid arguments")
