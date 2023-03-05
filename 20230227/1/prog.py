@@ -2,7 +2,12 @@ from cowsay import cowsay
 from cowsay import list_cows
 import shlex
 
-gamefield = [[[None, None] for j in range(10)] for i in range(10)]  #[0] - name; [1] - hello
+class Monster:
+    def __init__(self, name, hello, hp):
+        self.name = name
+        self.hello = hello
+        self.hp = hp
+gamefield = [[None for j in range(10)] for i in range(10)]
 
 def move(direction, x, y):
     match direction:
@@ -17,22 +22,24 @@ def move(direction, x, y):
     print(f"Moved to ({x}, {y})")
     return (x, y)
 
-def addmon(name, x, y, hello):
+def addmon(name, hello, hp, x, y):
+     hp = int(hp)
      if not ((0 <= x <= 9) and (0 <= y <= 9)):
         print("Invalid arguments")
         return
      if name not in list_cows():
          print("Cannot add unknown monster")
          return
-     repl_flag = gamefield[x][y][0]
-     gamefield[x][y][0] = name
-     gamefield[x][y][1] = hello
+     if hp <= 0:
+         print("Invalid hp argument")
+     repl_flag = gamefield[x][y]
+     gamefield[x][y] = Monster(name, hello, hp)
      print(f"Added monster {name} to ({x}, {y}) saying {hello}")
      if repl_flag:
          print("Replaced the old monster")
 
 def encounter(x, y):
-    print(cowsay(gamefield[x][y][1], cow=gamefield[x][y][0]))
+    print(cowsay(gamefield[x][y].hello, cow=gamefield[x][y].name))
      
 
 
@@ -48,10 +55,10 @@ while True:
     match s:
         case ['up' | 'down' | 'left' | 'right' as direction]:
             x,y = move(direction, x, y)
-            if gamefield[x][y][0] != None:
+            if gamefield[x][y] != None:
                 encounter(x,y)
-        case ['addmon', name, xstr, ystr, hello]:
-            addmon(name, int(xstr), int(ystr), hello)
+        case ['addmon', name, 'hello', hello, 'hp', hp, 'coords', xstr, ystr]:
+            addmon(name, hello, hp, int(xstr), int(ystr))
         case ['addmon' | 'up' | 'down' | 'left' |'right', *wtv]:
             print("Invalid arguments")
         case _:
