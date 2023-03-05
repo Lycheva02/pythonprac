@@ -1,5 +1,6 @@
 from cowsay import cowsay
 from cowsay import list_cows
+import shlex
 
 gamefield = [[[None, None] for j in range(10)] for i in range(10)]  #[0] - name; [1] - hello
 
@@ -43,14 +44,15 @@ while True:
         s = input()
     except EOFError:
         break
-    match s.split():
+    s = shlex.split(s)
+    match s:
         case ['up' | 'down' | 'left' | 'right' as direction]:
             x,y = move(direction, x, y)
             if gamefield[x][y][0] != None:
                 encounter(x,y)
-        case 'addmon', name, xstr, ystr, hello:
+        case ['addmon', name, xstr, ystr, hello]:
             addmon(name, int(xstr), int(ystr), hello)
-        case 'addmon' | 'up' | 'down' | 'left' |'right', *wtv:
+        case ['addmon' | 'up' | 'down' | 'left' |'right', *wtv]:
             print("Invalid arguments")
         case _:
             print("Invalid command")
