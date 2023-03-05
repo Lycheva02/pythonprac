@@ -2,7 +2,6 @@ from cowsay import cowsay
 from cowsay import list_cows
 from io import StringIO
 from cowsay import read_dot_cow
-import shlex
 
 custom_cow = read_dot_cow(StringIO('''
 $the_cow = <<EOC;
@@ -18,6 +17,7 @@ $the_cow = <<EOC;
   jgs     __\\\\'--'//__
          (((""`  `"")))
 EOC'''))
+
 
 gamefield = [[[None, None] for j in range(10)] for i in range(10)]  #[0] - name; [1] - hello
 
@@ -64,15 +64,14 @@ while True:
         s = input()
     except EOFError:
         break
-    s = shlex.split(s)
-    match s:
+    match s.split():
         case ['up' | 'down' | 'left' | 'right' as direction]:
             x,y = move(direction, x, y)
             if gamefield[x][y][0] != None:
                 encounter(x,y)
-        case ['addmon', name, xstr, ystr, hello]:
+        case 'addmon', name, xstr, ystr, hello:
             addmon(name, int(xstr), int(ystr), hello)
-        case ['addmon' | 'up' | 'down' | 'left' |'right', *wtv]:
+        case 'addmon' | 'up' | 'down' | 'left' |'right', *wtv:
             print("Invalid arguments")
         case _:
             print("Invalid command")
