@@ -1,5 +1,23 @@
 from cowsay import cowsay
 from cowsay import list_cows
+from io import StringIO
+from cowsay import read_dot_cow
+
+custom_cow = read_dot_cow(StringIO('''
+$the_cow = <<EOC;
+           $thoughts
+           $thoughts
+    ,_                    _,
+    ) '-._  ,_    _,  _.-' (
+    )  _.-'.|\\\\--//|.'-._  (
+     )'   .'\\/o\\/o\\/'.   `(
+      ) .' . \\====/ . '. (
+       )  / <<    >> \\  (
+        '-._/``  ``\\_.-'
+  jgs     __\\\\'--'//__
+         (((""`  `"")))
+EOC'''))
+
 
 gamefield = [[[None, None] for j in range(10)] for i in range(10)]  #[0] - name; [1] - hello
 
@@ -20,7 +38,7 @@ def addmon(name, x, y, hello):
      if not ((0 <= x <= 9) and (0 <= y <= 9)):
         print("Invalid arguments")
         return
-     if name not in list_cows():
+     if name not in list_cows() and name != 'jgsbat':
          print("Cannot add unknown monster")
          return
      repl_flag = gamefield[x][y][0]
@@ -31,7 +49,10 @@ def addmon(name, x, y, hello):
          print("Replaced the old monster")
 
 def encounter(x, y):
-    print(cowsay(gamefield[x][y][1], cow=gamefield[x][y][0]))
+    if gamefield[x][y][0] == 'jgsbat':
+        print(cowsay(gamefield[x][y][1], cowfile=custom_cow))
+    else:
+        print(cowsay(gamefield[x][y][1], cow=gamefield[x][y][0]))
      
 
 
