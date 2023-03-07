@@ -133,6 +133,8 @@ class Gameplay(cmd.Cmd):
 
     def complete_attack(self, prefix, line, start, end):
         variants = self.weaponlist
+        if not prefix or prefix == 'with':
+            return [i for i in variants]
         return [i for i in variants if i.startswith(prefix)]
 
     def do_quit(self, args):
