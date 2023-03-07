@@ -107,10 +107,15 @@ class Gameplay(cmd.Cmd):
             print("Replaced the old monster")
 
     def do_attack(self, args):
-        '''Attack the monster: attack [with <weapon>]'''
+        '''Attack the monster: attack <name> [with <weapon>]'''
         if not args:
-            args = 'with sword'
+            print("The name is essential")
+            return 0
         args = shlex.split(args)
+        name = args[0]
+        args.pop(0)
+        if not args:
+            args = shlex.split('with sword')
         if len(args) != 2:
             print("Invalid input")
             return 0
@@ -119,8 +124,8 @@ class Gameplay(cmd.Cmd):
             return 0
         damage = self.weaponlist[args[1]]
         m = self.gamefield[self.x][self.y]
-        if not m:
-            print("No monster here")
+        if not m or m.name != name:
+            print(f"No {name} here")
             return 0
         damage = min(damage, m.hp)
         m.hp -= damage
@@ -132,10 +137,15 @@ class Gameplay(cmd.Cmd):
             self.gamefield[self.x][self.y] = None
 
     def complete_attack(self, prefix, line, start, end):
-        variants = self.weaponlist
-        if not prefix or prefix == 'with':
-            return [i for i in variants]
-        return [i for i in variants if i.startswith(prefix)]
+        weapon_variants = self.weaponlist
+        name_variants = self.cowlist
+        if (not prefix and line.split()[-1] == 'with') or prefix == 'with':
+            return [i for i in weapon_variants]
+        if line.split()[-2] == 'with':
+            return [i for i in weapon_variants if i.startswith(prefix)]
+        if not prefix:
+            return [i for i in name_variants]
+        return [i for i in name_variants if i.startswith(prefix)]
 
     def do_quit(self, args):
         '''Exit the game'''
