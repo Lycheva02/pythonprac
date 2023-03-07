@@ -3,6 +3,7 @@ from cowsay import list_cows
 from io import StringIO
 from cowsay import read_dot_cow
 import shlex
+import cmd
 
 custom_cow = read_dot_cow(StringIO('''
 $the_cow = <<EOC;
@@ -24,57 +25,68 @@ class Monster:
         self.name = name
         self.hello = hello
         self.hp = hp
-gamefield = [[None for j in range(10)] for i in range(10)]
 
-def move(direction, x, y):
-    match direction:
-        case 'up':
-            y = (y - 1)%10
-        case 'down':
-            y = (y + 1)%10
-        case 'left':
-            x = (x - 1)%10
-        case 'right':
-            x = (x + 1)%10
-    print(f"Moved to ({x}, {y})")
-    return (x, y)
+class Gameplay(cmd.Cmd):
+    prompt = '>>> '
+    intro = "<<< Welcome to Python-MUD 0.1 >>>"
+    cowlist = list_cows() + ['jgsbat']
+    
+    def __init__(self):
+        self.gamefield = [[None for j in range(10)] for i in range(10)]
+        self.x, self.y = 0, 0
 
-def addmon(name, hello, hp, x, y):
-     hp = int(hp)
-     if not ((0 <= x <= 9) and (0 <= y <= 9)):
-        print("Invalid arguments")
-        return
-     if name not in list_cows() and name != 'jgsbat':
-         print("Cannot add unknown monster")
-         return
-     if hp <= 0:
-         print("Invalid hp argument")
-     repl_flag = gamefield[x][y]
-     gamefield[x][y] = Monster(name, hello, hp)
-     print(f"Added monster {name} to ({x}, {y}) saying {hello}")
-     if repl_flag:
-         print("Replaced the old monster")
+    def encounter(x, y):
+        if gamefield[x][y].name == 'jgsbat':
+            print(cowsay(gamefield[x][y].hello, cowfile=custom_cow))
+        else:
+            print(cowsay(gamefield[x][y].hello, cow=gamefield[x][y].name))
 
-def encounter(x, y):
-    if gamefield[x][y].name == 'jgsbat':
-        print(cowsay(gamefield[x][y].hello, cowfile=custom_cow))
-    else:
-        print(cowsay(gamefield[x][y].hello, cow=gamefield[x][y].name))
+    def do_left(self):
+        self.x = (self.x - 1)%10
+        print(f"Moved to ({self.x}, {self.y})")
+        if self.gamefield[self.x][self.y] != None:
+                self.encounter(self.x,self.y)
 
-x, y = 0, 0
+    def do_right(self):
+        self.x = (self.x + 1)%10
+        print(f"Moved to ({self.x}, {self.y})")
+        if self.gamefield[self.x][self.y] != None:
+                self.encounter(self.x,self.y)
 
-print("<<< Welcome to Python-MUD 0.1 >>>")
-while True:
-    try:
-        s = input()
-    except EOFError:
-        break
-    s = shlex.split(s)
-    match s:
-        case ['up' | 'down' | 'left' | 'right' as direction]:
-            x,y = move(direction, x, y)
-            if gamefield[x][y] != None:
-                encounter(x,y)
+    def do_up(self):
+        self.y = (self.y - 1)%10
+        print(f"Moved to ({self.x}, {self.y})")
+        if self.gamefield[self.x][self.y] != None:
+                self.encounter(self.x,self.y)
+
+    def do_down(self):
+        self.y = (self.y + 1)%10
+        print(f"Moved to ({self.x}, {self.y})")
+        if self.gamefield[self.x][self.y] != None:
+                self.encounter(self.x,self.y)
+
+    def do_addmon(name, hello, hp, x, y):
+         if not ((0 <= x <= 9) and (0 <= y <= 9)):
+            print("Invalid arguments")
+            return
+         if name not in self.cowlist:
+             print("Cannot add unknown monster")
+             return
+         if hp <= 0:
+             print("Invalid hp argument")
+         repl_flag = self.gamefield[x][y]
+         self.gamefield[x][y] = Monster(name, hello, hp)
+         print(f"Added monster {name} to ({x}, {y}) saying {hello}")
+         if repl_flag:
+             print("Replaced the old monster")
+
+    def do_quit(self, args):
+        '''Выход из игры'''
+        return 1
+
+game = Gameplay()
+game.cmdloop()
+
         case ['addmon', name, *parameters]:
             try:
                 hello = parameters[parameters.index('hello') + 1]
