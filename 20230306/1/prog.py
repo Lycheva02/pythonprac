@@ -30,6 +30,7 @@ class Gameplay(cmd.Cmd):
     prompt = '>>> '
     intro = "<<< Welcome to Python-MUD 0.1 >>>"
     cowlist = list_cows() + ['jgsbat']
+    weaponlist = {'sword': 10, 'spear': 15, 'axe': 20}
     gamefield = [[None for j in range(10)] for i in range(10)]
     x, y = 0, 0
 
@@ -106,11 +107,22 @@ class Gameplay(cmd.Cmd):
             print("Replaced the old monster")
 
     def do_attack(self, args):
+        '''Attack the monster: attack [with <weapon>]'''
+        if not args:
+            args = 'with sword'
+        args = shlex.split(args)
+        if len(args) != 2:
+            print("Invalid input")
+            return 0
+        if args[1] not in self.weaponlist:
+            print("Unknown weapon")
+            return 0
+        damage = self.weaponlist[args[1]]
         m = self.gamefield[self.x][self.y]
         if not m:
             print("No monster here")
             return 0
-        damage = min(10, m.hp)
+        damage = min(damage, m.hp)
         m.hp -= damage
         print(f"Attacked {m.name}, damage {damage} hp")
         if m.hp:
@@ -118,6 +130,10 @@ class Gameplay(cmd.Cmd):
         else:
             print(f"{m.name} died")
             self.gamefield[self.x][self.y] = None
+
+    def complete_attack(self, prefix, line, start, end):
+        variants = self.weaponlist
+        return [i for i in variants if i.startswith(prefix)]
 
     def do_quit(self, args):
         '''Exit the game'''
