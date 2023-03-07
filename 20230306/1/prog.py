@@ -105,8 +105,25 @@ class Gameplay(cmd.Cmd):
         if repl_flag:
             print("Replaced the old monster")
 
-    def do_quit(self, *args):
+    def do_attack(self, args):
+        m = self.gamefield[self.x][self.y]
+        if not m:
+            print("No monster here")
+            return 0
+        damage = min(10, m.hp)
+        m.hp -= damage
+        print(f"Attacked {m.name}, damage {damage} hp")
+        if m.hp:
+            print(f"{m.name} now has {m.hp}")
+        else:
+            print(f"{m.name} died")
+            self.gamefield[self.x][self.y] = None
+
+    def do_quit(self, args):
         '''Exit the game'''
+        return 1
+
+    def do_EOF(self, args):
         return 1
 
     def default(line):
