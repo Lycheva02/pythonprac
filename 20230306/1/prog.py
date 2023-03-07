@@ -106,9 +106,18 @@ class Gameplay(cmd.Cmd):
             print("Replaced the old monster")
 
     def do_attack(self, args):
+        '''Attack a monster: attack <name>'''
+        if not args:
+            print("The name is essential")
+            return 0
+        args = shlex.split(args)
+        if len(args) != 1:
+            print("Invalid syntax")
+            return 0
+        name = args[0]
         m = self.gamefield[self.x][self.y]
-        if not m:
-            print("No monster here")
+        if not m or m.name != name:
+            print(f"No {name} here")
             return 0
         damage = min(10, m.hp)
         m.hp -= damage
@@ -118,6 +127,12 @@ class Gameplay(cmd.Cmd):
         else:
             print(f"{m.name} died")
             self.gamefield[self.x][self.y] = None
+
+    def complete_attack(self, prefix, line, begidx, endidx):
+        variants = self.cowlist
+        if not prefix:
+            return [i for i in variants]
+        return [i for i in variants if i.startswith(prefix)]
 
     def do_quit(self, args):
         '''Exit the game'''
