@@ -1,0 +1,28 @@
+From 4d9094fef2c9f338c64e826c93889ce8dc3ac192 Mon Sep 17 00:00:00 2001
+From: Lycheva Ekaterina <s02200433@gse.cs.msu.ru>
+Date: Sun, 19 Mar 2023 09:47:20 +0300
+Subject: [PATCH 3/3] =?UTF-8?q?=D0=94=D0=BE=D0=B1=D0=B0=D0=B2=D0=BB=D0=B5?=
+ =?UTF-8?q?=D0=BD=20shutdown=20=D1=81=D0=BE=D0=BA=D0=B5=D1=82=D0=B0?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ 20230313/1/client.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/20230313/1/client.py b/20230313/1/client.py
+index 8c6ae15..93d0a13 100644
+--- a/20230313/1/client.py
++++ b/20230313/1/client.py
+@@ -155,6 +155,7 @@ class Gameplay(cmd.Cmd):
+ 
+     def do_quit(self, args):
+         '''Exit the game'''
++        self.socket.shutdown(socket.SHUT_RDWR)
+         self.socket.close()
+         return 1
+ 
+-- 
+2.25.1
+
