@@ -155,6 +155,7 @@ class Gameplay(cmd.Cmd):
 
     def do_quit(self, args):
         '''Exit the game'''
+        self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
         return 1
 
