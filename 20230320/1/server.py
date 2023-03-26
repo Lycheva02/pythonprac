@@ -12,6 +12,7 @@ class Gameplay():
     x, y = 0, 0
     clients = {}
     players = {}
+    weapons = {10: 'sword', 15: 'spear', 20: 'axe'} 
 
     def encounter(self, nm, x, y):
         x_coord, y_coord = self.players[nm]
@@ -21,23 +22,24 @@ class Gameplay():
     def addmon(self, name, hello, hp, x, y):
         repl_flag = self.gamefield[x][y]
         self.gamefield[x][y] = Monster(name, hello, hp)
-        ans = f"Added monster {name} to ({x}, {y}) saying {hello}"
+        ans = f"Added monster {name} to ({x}, {y}) saying {hello} with {hp} hp"
         if repl_flag:
-            ans += "\nReplaced the old monster"
+            ans += "\nReplaced the old monster\n"
         return ans
 
-    def attack(self, name, damage):
+    def attack(self, nm, name, damage):
+        weapon = self.weapons[damage]
         x_coord, y_coord = self.players[nm]
         m = self.gamefield[x_coord][y_coord]
         if not m or m.name != name:
             return f"No {name} here"
         damage = min(damage, m.hp)
         m.hp -= damage
-        ans = f"Attacked {m.name}, damage {damage} hp"
+        ans = f"{nm} attacked {m.name} with {weapon}, damage {damage} hp"
         if m.hp:
-            ans += f"\n{m.name} now has {m.hp}"
+            ans += f"\n{m.name} now has {m.hp}\n"
         else:
-            ans += f"\n{m.name} died"
+            ans += f"\n{m.name} died\n"
             self.gamefield[x_coord][y_coord] = None
         return ans
 
@@ -52,7 +54,6 @@ class Gameplay():
                 if t is send:
                     send = asyncio.create_task(reader.readline())
                     data = t.result().decode().strip()
-                    ans = f'{nm}'
                     data = shlex.split(data)
                     match data:
                         case ['login', name]:
@@ -61,6 +62,8 @@ class Gameplay():
                                 await writer.drain()
                                 continue
                             nm = name
+                            for i, iq in self.clients.items():
+                                await iq.put(f"{nm} joined")
                             self.clients[nm] = q
                             self.players[nm] = [0,0]
                             writer.write('\n'.encode())
@@ -72,18 +75,20 @@ class Gameplay():
                             x_coord, y_coord = self.players[nm]
                             ans = f"Moved to ({x_coord}, {y_coord})"
                             if self.gamefield[x_coord][y_coord] != None:
-                                ans += f"\n{shlex.join(self.encounter(x_coord, y_coord))}"
-                            writer.write(ans.encode())
-                            await writer.drain()
+                                ans += f"\n{shlex.join(self.encounter(nm, x_coord, y_coord))}"
+                            await self.clients[nm].put(ans)
                         case ['addmon', name, hello, hp, x_str, y_str]:
-                            writer.write(self.addmon(name, hello, int(hp), int(x_str), int(y_str)).encode())
-                            await writer.drain()
+                            ans = self.addmon(name, hello, int(hp), int(x_str), int(y_str))
+                            for i, iq in self.clients.items():
+                                    await iq.put(ans)
                         case ['attack', name, damage]:
-                            writer.write(self.attack(name, int(damage)).encode())
-                            await writer.drain()
+                            ans = self.attack(nm, name, int(damage))
+                            if ans == f"No {name} here" :
+                                await self.clients[nm].put(ans)
+                            else:
+                                for i, iq in self.clients.items():
+                                    await iq.put(ans)
                         case ['quit']:
-                            writer.write('quit'.encode())
-                            await writer.drain()
                             break
                 elif t is receive:
                     receive = asyncio.create_task(q.get())
