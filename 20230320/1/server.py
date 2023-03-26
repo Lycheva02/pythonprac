@@ -10,9 +10,12 @@ class Monster:
 class Gameplay():
     gamefield = [[None for j in range(10)] for i in range(10)]
     x, y = 0, 0
+    clients = {}
+    players = {}
 
-    def encounter(self, x, y):
-        mon = self.gamefield[self.x][self.y]
+    def encounter(self, nm, x, y):
+        x_coord, y_coord = self.players[nm]
+        mon = self.gamefield[x_coord][y_coord]
         return [mon.name, mon.hello]
 
     def addmon(self, name, hello, hp, x, y):
@@ -24,7 +27,8 @@ class Gameplay():
         return ans
 
     def attack(self, name, damage):
-        m = self.gamefield[self.x][self.y]
+        x_coord, y_coord = self.players[nm]
+        m = self.gamefield[x_coord][y_coord]
         if not m or m.name != name:
             return f"No {name} here"
         damage = min(damage, m.hp)
@@ -34,28 +38,63 @@ class Gameplay():
             ans += f"\n{m.name} now has {m.hp}"
         else:
             ans += f"\n{m.name} died"
-            self.gamefield[self.x][self.y] = None
+            self.gamefield[x_coord][y_coord] = None
         return ans
 
     async def play(self, reader, writer):
+        nm = None
+        q = asyncio.Queue()
+        send = asyncio.create_task(reader.readline())
+        receive = asyncio.create_task(q.get())
         while not reader.at_eof():
-            data = await reader.readline()
-            data = shlex.split(data.strip().decode())
-            match data:
-                case ['move', x_chng, y_chng]:
-                    self.x = (self.x + int(x_chng)) % 10
-                    self.y = (self.y + int(y_chng)) % 10
-                    ans = f"Moved to ({self.x}, {self.y})"
-                    if self.gamefield[self.x][self.y] != None:
-                        ans += f"\n{shlex.join(self.encounter(self.x, self.y))}"
-                    writer.write(ans.encode())
+            done, pending = await asyncio.wait([send, receive], return_when=asyncio.FIRST_COMPLETED)
+            for t in done:
+                if t is send:
+                    send = asyncio.create_task(reader.readline())
+                    data = t.result().decode().strip()
+                    ans = f'{nm}'
+                    data = shlex.split(data)
+                    match data:
+                        case ['login', name]:
+                            if name in self.clients:
+                                writer.write('connection refused'.encode())
+                                await writer.drain()
+                                continue
+                            nm = name
+                            self.clients[nm] = q
+                            self.players[nm] = [0,0]
+                            writer.write('\n'.encode())
+                            await writer.drain()
+                        case ['move', x_chng, y_chng]:
+                            x_coord, y_coord = self.players[nm]
+                            self.players[nm][0] = (x_coord + int(x_chng)) % 10
+                            self.players[nm][1] = (y_coord + int(y_chng)) % 10
+                            x_coord, y_coord = self.players[nm]
+                            ans = f"Moved to ({x_coord}, {y_coord})"
+                            if self.gamefield[x_coord][y_coord] != None:
+                                ans += f"\n{shlex.join(self.encounter(x_coord, y_coord))}"
+                            writer.write(ans.encode())
+                            await writer.drain()
+                        case ['addmon', name, hello, hp, x_str, y_str]:
+                            writer.write(self.addmon(name, hello, int(hp), int(x_str), int(y_str)).encode())
+                            await writer.drain()
+                        case ['attack', name, damage]:
+                            writer.write(self.attack(name, int(damage)).encode())
+                            await writer.drain()
+                        case ['quit']:
+                            writer.write('quit'.encode())
+                            await writer.drain()
+                            break
+                elif t is receive:
+                    receive = asyncio.create_task(q.get())
+                    writer.write(f"{t.result()}\n".encode())
                     await writer.drain()
-                case ['addmon', name, hello, hp, x_str, y_str]:
-                    writer.write(self.addmon(name, hello, int(hp), int(x_str), int(y_str)).encode())
-                    await writer.drain()
-                case ['attack', name, damage]:
-                    writer.write(self.attack(name, int(damage)).encode())
-                    await writer.drain()
+        send.cancel()
+        receive.cancel()
+        if nm != None:
+            del self.clients[nm]
+            for i, iq in self.clients.items():
+                await iq.put(f"{nm} exit")
         writer.close()
         await writer.wait_closed()
 

@@ -6,6 +6,9 @@ import shlex
 import cmd
 import socket
 import sys
+import threading
+import time
+import readline
 
 custom_cow = read_dot_cow(StringIO('''
 $the_cow = <<EOC;
@@ -29,11 +32,20 @@ class Gameplay(cmd.Cmd):
     weaponlist = {'sword': 10, 'spear': 15, 'axe': 20}
     gamefield = [[None for j in range(10)] for i in range(10)]
     x, y = 0, 0
+    ON = True
 
-    def __init__(self, *args):
+    def __init__(self, name, *args):
         super().__init__(*args)
+        self.name = name
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(('localhost', 8080))
+        self.socket.send(f'login {name}\n'.encode())
+        data = self.socket.recv(1024).decode().strip()
+        if data == 'connection refused':
+            self.socket.shutdown(socket.SHUT_RDWR)
+            self.socket.close()
+            self.ON = False
+            return 1
 
     def do_left(self, args):
         '''Move one step left'''
@@ -155,8 +167,11 @@ class Gameplay(cmd.Cmd):
 
     def do_quit(self, args):
         '''Exit the game'''
+        self.socket.send('quit\n'.encode())
+        data = self.socket.recv(1024).decode()
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
+        self.ON = False
         return 1
 
     def do_EOF(self, args):
@@ -165,8 +180,14 @@ class Gameplay(cmd.Cmd):
     def default(line):
         print("Invalid command")
 
+    def spam(self):
+        while self.ON:
+            pass
 
-
-game = Gameplay()
-game.cmdloop()
-        
+try:
+    game = Gameplay(sys.argv[1])
+    timer = threading.Thread(target=game.spam, args=())
+    timer.start()
+    game.cmdloop()
+except:
+	 pass      
