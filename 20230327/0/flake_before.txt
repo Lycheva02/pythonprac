@@ -1,0 +1,2 @@
+prog.py:1:2: E231 missing whitespace after ','
+prog.py:2:12: E231 missing whitespace after ','
