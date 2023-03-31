@@ -5,8 +5,6 @@ from cowsay import read_dot_cow
 import shlex
 import cmd
 import socket
-import sys
-import threading
 import time
 import readline
 
@@ -161,12 +159,4 @@ class Gameplay(cmd.Cmd):
                 else:
                     print(f"{cowsay(data[1], cow=data[0])}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)
             else:
-                print(f"{data}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)
-
-try:
-    game = Gameplay(sys.argv[1])
-    timer = threading.Thread(target=game.spam, args=())
-    timer.start()
-    game.cmdloop()
-except:
-	 pass      
+                print(f"{data}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)  

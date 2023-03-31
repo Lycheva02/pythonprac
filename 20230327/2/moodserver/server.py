@@ -109,11 +109,3 @@ class Gameplay():
                 await iq.put(f"{nm} exit")
         writer.close()
         await writer.wait_closed()
-
-async def main():
-    gmpl = Gameplay()
-    server = await asyncio.start_server(gmpl.play, '0.0.0.0', 8080)
-    async with server:
-        await server.serve_forever()
-
-asyncio.run(main())
