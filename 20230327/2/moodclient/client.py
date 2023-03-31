@@ -1,3 +1,4 @@
+"""Realisation of client."""
 from cowsay import cowsay
 from cowsay import list_cows
 from io import StringIO
@@ -5,7 +6,6 @@ from cowsay import read_dot_cow
 import shlex
 import cmd
 import socket
-import time
 import readline
 
 custom_cow = read_dot_cow(StringIO('''
@@ -23,7 +23,10 @@ $the_cow = <<EOC;
          (((""`  `"")))
 EOC'''))
 
+
 class Gameplay(cmd.Cmd):
+    """Gameplay realisation."""
+
     prompt = '>>> '
     intro = "<<< Welcome to Python-MUD 0.1 >>>"
     cowlist = list_cows() + ['jgsbat']
@@ -33,6 +36,7 @@ class Gameplay(cmd.Cmd):
     ON = True
 
     def __init__(self, name, *args):
+        """Initiate gameplay."""
         super().__init__(*args)
         self.name = name
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,34 +50,34 @@ class Gameplay(cmd.Cmd):
             return 1
 
     def do_left(self, args):
-        '''Move one step left'''
+        """Move one step left."""
         if args:
             print("Invalid arguments")
             return 0
         self.socket.send('move -1 0\n'.encode())
 
     def do_right(self, args):
-        '''Move one step right'''
+        """Move one step right."""
         if args:
             print("Invalid arguments")
             return 0
         self.socket.send('move 1 0\n'.encode())
 
     def do_up(self, args):
-        '''Move one step up'''
+        """Move one step up."""
         if args:
             print("Invalid arguments")
             return 0
 
     def do_down(self, args):
-        '''Move one step down'''
+        """Move one step down."""
         if args:
             print("Invalid arguments")
             return 0
         self.socket.send('move 0 1\n'.encode())
 
     def do_addmon(self, args):
-        ''' Add a monster:  addmon <name> coord <x> <y> hello <message> hp <health points>'''
+        """Add a monster:  addmon <name> coord <x> <y> hello <message> hp <health points>."""
         args = shlex.split(args)
         try:
             name = args[0]
@@ -81,7 +85,7 @@ class Gameplay(cmd.Cmd):
             hp = int(args[args.index('hp') + 1])
             coord_ind = args.index('coords')
             x, y = list(map(int, args[coord_ind + 1: coord_ind + 3]))
-        except:
+        except:  # noqa: E722
             print("Wrong parameters")
             return 0
         if not ((0 <= x <= 9) and (0 <= y <= 9)):
@@ -92,11 +96,11 @@ class Gameplay(cmd.Cmd):
             return 0
         if hp <= 0:
             print("Invalid hp argument")
-        self.socket.send((shlex.join(["addmon", name, hello, str(hp), str(x), str(y)]) + '\n').encode())
-        #print(self.socket.recv(1024).decode().strip())
+        msg = shlex.join(["addmon", name, hello, str(hp), str(x), str(y)]) + '\n'
+        self.socket.send(msg.encode())
 
     def do_attack(self, args):
-        '''Attack the monster: attack <name> [with <weapon>]'''
+        """Attack the monster: attack <name> [with <weapon>]."""
         if not args:
             print("The name is essential")
             return 0
@@ -110,11 +114,12 @@ class Gameplay(cmd.Cmd):
             return 0
         if args[1] not in self.weaponlist:
             print("Unknown weapon")
-            return 
+            return
         damage = self.weaponlist[args[1]]
         self.socket.send((shlex.join(["attack", name, str(damage)]) + '\n').encode())
 
     def complete_attack(self, prefix, line, start, end):
+        """Attack command completion."""
         weapon_variants = self.weaponlist
         name_variants = self.cowlist
         if (not prefix and line.split()[-1] == 'with') or prefix == 'with':
@@ -124,26 +129,29 @@ class Gameplay(cmd.Cmd):
         if not prefix:
             return [i for i in name_variants]
         return [i for i in name_variants if i.startswith(prefix)]
-        
+
     def do_sayall(self, args):
+        """Send message to all players."""
         self.socket.send((shlex.join(["SAYALL", str(args)]) + '\n').encode())
 
     def do_quit(self, args):
-        '''Exit the game'''
+        """Exit the game."""
         self.socket.send('quit\n'.encode())
-        #data = self.socket.recv(1024).decode()
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
         self.ON = False
         return 1
 
     def do_EOF(self, args):
+        """Exit game if file ends."""
         return 1
 
     def default(line):
+        """Reaction to non-existed command."""
         print("Invalid command")
 
     def spam(self):
+        """Reaction to server messages."""
         while self.ON:
             try:
                 data = self.socket.recv(1024).decode().strip()
@@ -151,12 +159,16 @@ class Gameplay(cmd.Cmd):
                 break
             if data.startswith("Moved ") and len(data.split('\n')) > 1:
                 data = data.split('\n')
-                print(f"{data[0]}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)
+                print(f"{data[0]}\n{self.prompt}{readline.get_line_buffer()}", end='', flush=True)
                 if len(data) == 2:
                     data = data[1].split()
-                if  data[0] == 'jgsbat':
-                    print(f"{cowsay(data[1], cowfile=custom_cow)}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)
+                if data[0] == 'jgsbat':
+                    msg = data[1]
+                    s = f"{cowsay(msg, cowfile=custom_cow)}"
+                    print(f"{s}\n{self.prompt}{readline.get_line_buffer()}", end='', flush=True)
                 else:
-                    print(f"{cowsay(data[1], cow=data[0])}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)
+                    msg = data[1]
+                    s = f"{cowsay(data[1], cow=data[0])}"
+                    print(f"{s}\n{self.prompt}{readline.get_line_buffer()}", end='', flush=True)
             else:
-                print(f"{data}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)  
+                print(f"{data}\n{self.prompt}{readline.get_line_buffer()}", end='', flush=True)
