@@ -88,6 +88,13 @@ class Gameplay():
                             else:
                                 for i, iq in self.clients.items():
                                     await iq.put(ans)
+                        case ['SAYALL', args]:
+                            if args[0] == args[-1] == '"':
+                                args = args[1:-1]
+                            for i, iq in self.clients.items():
+                                if i == nm:
+                                    continue
+                                await iq.put(nm + ': ' + args)
                         case ['quit']:
                             break
                 elif t is receive:

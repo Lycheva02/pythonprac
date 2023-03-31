@@ -53,15 +53,6 @@ class Gameplay(cmd.Cmd):
             print("Invalid arguments")
             return 0
         self.socket.send('move -1 0\n'.encode())
-        #data = self.socket.recv(1024).decode()
-#        data = data.split('\n')
- #       print(data[0])
-  #      if len(data) == 2:
-   #         data = data[1].split()
-    #        if  data[0] == 'jgsbat':
-     #           print(cowsay(data[1], cowfile=custom_cow))
-      #      else:
-       #         print(cowsay(data[1], cow=data[0]))
 
     def do_right(self, args):
         '''Move one step right'''
@@ -69,31 +60,12 @@ class Gameplay(cmd.Cmd):
             print("Invalid arguments")
             return 0
         self.socket.send('move 1 0\n'.encode())
-       # data = self.socket.recv(1024).decode()
-        #data = data.split('\n')
-        #print(data[0])
-        #if len(data) == 2:
-         #   data = data[1].split()
-          #  if  data[0] == 'jgsbat':
-           #     print(cowsay(data[1], cowfile=custom_cow))
-            #else:
-             #   print(cowsay(data[1], cow=data[0]))
 
     def do_up(self, args):
         '''Move one step up'''
         if args:
             print("Invalid arguments")
             return 0
-        self.socket.send('move 0 -1\n'.encode())
-        #data = self.socket.recv(1024).decode()
-#        data = data.split('\n')
- #       print(data[0])
-  #      if len(data) == 2:
-   #         data = data[1].split()
-    #        if  data[0] == 'jgsbat':
-     #           print(cowsay(data[1], cowfile=custom_cow))
-      #      else:
-       #         print(cowsay(data[1], cow=data[0]))
 
     def do_down(self, args):
         '''Move one step down'''
@@ -101,15 +73,6 @@ class Gameplay(cmd.Cmd):
             print("Invalid arguments")
             return 0
         self.socket.send('move 0 1\n'.encode())
-        #data = self.socket.recv(1024).decode()
-#        data = data.split('\n')
- #       print(data[0])
-  #      if len(data) == 2:
-   #         data = data[1].split()
-    #        if  data[0] == 'jgsbat':
-     #           print(cowsay(data[1], cowfile=custom_cow))
-      #      else:
-       #         print(cowsay(data[1], cow=data[0]))
 
     def do_addmon(self, args):
         ''' Add a monster:  addmon <name> coord <x> <y> hello <message> hp <health points>'''
@@ -163,6 +126,9 @@ class Gameplay(cmd.Cmd):
         if not prefix:
             return [i for i in name_variants]
         return [i for i in name_variants if i.startswith(prefix)]
+        
+    def do_sayall(self, args):
+        self.socket.send((shlex.join(["SAYALL", str(args)]) + '\n').encode())
 
     def do_quit(self, args):
         '''Exit the game'''
@@ -181,7 +147,10 @@ class Gameplay(cmd.Cmd):
 
     def spam(self):
         while self.ON:
-            data = self.socket.recv(1024).decode().strip()
+            try:
+                data = self.socket.recv(1024).decode().strip()
+            except OSError:
+                break
             if data.startswith("Moved ") and len(data.split('\n')) > 1:
                 data = data.split('\n')
                 print(f"{data[0]}\n{self.prompt}{readline.get_line_buffer()}", end = '', flush=True)
