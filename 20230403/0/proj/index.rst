@@ -12,6 +12,11 @@ Welcome to Proj's documentation!
 
    otherfile
    calend
+
+.. automodule:: restcalend
+  :members:
+  :private-members:
+
 .. literalinclude:: restcalend.py
   :language: python
 .. image:: funny.jpg

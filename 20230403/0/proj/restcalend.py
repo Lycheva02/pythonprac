@@ -1,6 +1,16 @@
+"""
+Calendar module
+"""
 import calendar
 
-def restmonth(y, m)
+def restmonth(y, m):
+    """
+    Return a calendar
+
+    :param y: Year
+    :param m: Month
+    :return: calendar string
+    """
     s = calendar.month(y, m)
     s = s.split('\n')
     n = len(s[1])
@@ -20,5 +30,5 @@ def restmonth(y, m)
 
     return '\n'.join(ans)
  
- if __name__ == '__main__':
+if __name__ == '__main__':
     print(restmonth(int(sys.argv[1]), int(sys.argv[2])))
