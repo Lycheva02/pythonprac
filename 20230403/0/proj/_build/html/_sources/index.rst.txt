@@ -12,6 +12,8 @@ Welcome to Proj's documentation!
 
    otherfile
    calend
+.. literalinclude:: restcalend.py
+  :language: python
 .. image:: funny.jpg
 
 Indices and tables
