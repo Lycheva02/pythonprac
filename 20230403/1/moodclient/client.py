@@ -1,4 +1,6 @@
-"""Realisation of client."""
+"""
+Realisation of client.
+"""
 from cowsay import cowsay
 from cowsay import list_cows
 from io import StringIO
@@ -24,8 +26,31 @@ $the_cow = <<EOC;
 EOC'''))
 
 
-class Gameplay(cmd.Cmd):
-    """Gameplay realisation."""
+class Client_Gameplay(cmd.Cmd):
+    """
+    Gameplay realisation.
+    
+    :param prompt: command line prompt.
+    :type prompt: str
+    :param intro: gameplay introduction.
+    :type intro: str
+    :param cowlist: list of available cows.
+    :type cowlist: list
+    :param weaponlist: dictionary of available weapons.
+    :type weaponlist: dict
+    :param gamefield: gamefield.
+    :type gamefield: list
+    :param x: x coordinate.
+    :type x: int
+    :param y: y coordinate.
+    :type y: int
+    :param ON: flag of connection.
+    :type ON: bool
+    :param name: player's name.
+    :type name: str
+    :param socket: socket to server.
+    :type socket: socket
+    """
 
     prompt = '>>> '
     intro = "<<< Welcome to Python-MUD 0.1 >>>"
@@ -78,7 +103,9 @@ class Gameplay(cmd.Cmd):
         self.socket.send('move 0 1\n'.encode())
 
     def do_addmon(self, args):
-        """Add a monster:  addmon <name> coord <x> <y> hello <message> hp <health points>."""
+        """
+        Add a monster:  addmon <name> coord <x> <y> hello <message> hp <health points>.
+        """
         args = shlex.split(args)
         try:
             name = args[0]

@@ -1,11 +1,22 @@
-"""Server realisation."""
+"""
+Server realisation.
+"""
 import shlex
 import asyncio
 import random
 
 
 class Monster:
-    """Monster entity."""
+    """
+    Monster entity.
+    
+    :param name: monster's name.
+    :type name: str
+    :param hello: monster's hello string.
+    :type hello: str
+    :param hp: monster's health points.
+    :type hp: int
+    """
 
     def __init__(self, name, hello, hp):
         """Initiate monster."""
@@ -24,13 +35,35 @@ class Gameplay():
     weapons = {10: 'sword', 15: 'spear', 20: 'axe'}
 
     def encounter(self, nm):
-        """Meet monster."""
+        """
+        Meet monster.
+        
+        :param nm: player's name.
+        :type name: str
+        :return: monster's parameters.
+        :rtype: list
+        """
         x_coord, y_coord = self.players[nm]
         mon = self.gamefield[x_coord][y_coord]
         return [mon.name, mon.hello]
 
     def addmon(self, name, hello, hp, x, y):
-        """Add monster."""
+        """
+        Add monster.
+        
+        :param name: monster's name.
+        :type name: str
+        :param hello: monster's hello word.
+        :type hello: str
+        :param hp: monster's health points.
+        :type hp: int
+        :param x: x coordinate.
+        :type x: int
+        :param y: y coordinate.
+        :type y: int
+        :return: message for players.
+        :rtype: str
+        """
         repl_flag = self.gamefield[x][y]
         self.gamefield[x][y] = Monster(name, hello, hp)
         ans = f"Added monster {name} to ({x}, {y}) saying {hello} with {hp} hp"
@@ -39,7 +72,18 @@ class Gameplay():
         return ans
 
     def attack(self, nm, name, damage):
-        """Attack realisation."""
+        """
+        Attack realisation.
+        
+        :param nm: player's name.
+        :type nm: str
+        :param name: monster's name.
+        :type name: str
+        :param damage: damage.
+        :type damage: int
+        :return: message for player.
+        :rtype: str
+        """
         weapon = self.weapons[damage]
         x_coord, y_coord = self.players[nm]
         m = self.gamefield[x_coord][y_coord]
@@ -56,9 +100,12 @@ class Gameplay():
         return ans
 
     async def monster_motion(self):
+        """
+        Monster's movement realisation.
+        """
         variants = {(0, 1): 'down', (0, -1): 'up', (1, 0): 'right', (-1, 0): 'left'}
         while True:
-            mon_places = [[x,y] for x in range(10) for y in range(10) if self.gamefield[x][y] is not None]
+            mon_places = [[x, y] for x in range(10) for y in range(10) if self.gamefield[x][y] is not None]
             if mon_places:
                 while True:
                     mon_pos = random.choice(mon_places)
@@ -70,14 +117,14 @@ class Gameplay():
                 self.gamefield[mon_pos[0]][mon_pos[1]] = None
                 self.gamefield[x_new][y_new] = mon
                 ans = f"{mon.name} moved one cell {variants[direction]}"
-                for i, iq  in self.clients.items():
+                for i, iq in self.clients.items():
                     await iq.put(ans)
                 for pl, ppos in self.players.items():
                     if ppos == [x_new, y_new]:
                         ans = f"MONSTER\n{shlex.join(self.encounter(pl))}"
                         await self.clients[pl].put(ans)
-            await asyncio.sleep(10)
-
+            await asyncio.sleep(30)
+   
     async def play(self, reader, writer):
         """Communicate with client."""
         nm = None
