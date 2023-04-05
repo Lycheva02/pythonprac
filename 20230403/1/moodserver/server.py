@@ -1,6 +1,7 @@
 """Server realisation."""
 import shlex
 import asyncio
+import random
 
 
 class Monster:
@@ -22,7 +23,7 @@ class Gameplay():
     players = {}
     weapons = {10: 'sword', 15: 'spear', 20: 'axe'}
 
-    def encounter(self, nm, x, y):
+    def encounter(self, nm):
         """Meet monster."""
         x_coord, y_coord = self.players[nm]
         mon = self.gamefield[x_coord][y_coord]
@@ -53,6 +54,29 @@ class Gameplay():
             ans += f"\n{m.name} died\n"
             self.gamefield[x_coord][y_coord] = None
         return ans
+
+    async def monster_motion(self):
+        variants = {(0, 1): 'down', (0, -1): 'up', (1, 0): 'right', (-1, 0): 'left'}
+        while True:
+            mon_places = [[x,y] for x in range(10) for y in range(10) if self.gamefield[x][y] is not None]
+            if mon_places:
+                while True:
+                    mon_pos = random.choice(mon_places)
+                    direction = random.choice([(0, 1), (0, -1), (1, 0), (-1, 0)])
+                    x_new, y_new = (mon_pos[0] + direction[0]) % 10, (mon_pos[1] + direction[1]) % 10
+                    if self.gamefield[x_new][y_new] is None:
+                        break
+                mon = self.gamefield[mon_pos[0]][mon_pos[1]]
+                self.gamefield[mon_pos[0]][mon_pos[1]] = None
+                self.gamefield[x_new][y_new] = mon
+                ans = f"{mon.name} moved one cell {variants[direction]}"
+                for i, iq  in self.clients.items():
+                    await iq.put(ans)
+                for pl, ppos in self.players.items():
+                    if ppos == [x_new, y_new]:
+                        ans = f"MONSTER\n{shlex.join(self.encounter(pl))}"
+                        await self.clients[pl].put(ans)
+            await asyncio.sleep(10)
 
     async def play(self, reader, writer):
         """Communicate with client."""
@@ -87,7 +111,7 @@ class Gameplay():
                             x_coord, y_coord = self.players[nm]
                             ans = f"Moved to ({x_coord}, {y_coord})"
                             if self.gamefield[x_coord][y_coord] is not None:
-                                ans += f"\n{shlex.join(self.encounter(nm, x_coord, y_coord))}"
+                                ans += f"\n{shlex.join(self.encounter(nm))}"
                             await self.clients[nm].put(ans)
                         case ['addmon', name, hello, hp, x_str, y_str]:
                             ans = self.addmon(name, hello, int(hp), int(x_str), int(y_str))

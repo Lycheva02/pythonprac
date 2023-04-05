@@ -68,6 +68,7 @@ class Gameplay(cmd.Cmd):
         if args:
             print("Invalid arguments")
             return 0
+        self.socket.send('move 0 -1\n'.encode())
 
     def do_down(self, args):
         """Move one step down."""
@@ -157,9 +158,10 @@ class Gameplay(cmd.Cmd):
                 data = self.socket.recv(1024).decode().strip()
             except OSError:
                 break
-            if data.startswith("Moved ") and len(data.split('\n')) > 1:
+            if data.startswith("Moved ") and len(data.split('\n')) > 1 or data.startswith("MONSTER"):
                 data = data.split('\n')
-                print(f"{data[0]}\n{self.prompt}{readline.get_line_buffer()}", end='', flush=True)
+                if data[0] != "MONSTER":
+                    print(f"{data[0]}\n{self.prompt}{readline.get_line_buffer()}", end='', flush=True)
                 if len(data) == 2:
                     data = data[1].split()
                 if data[0] == 'jgsbat':
