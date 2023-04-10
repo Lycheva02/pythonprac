@@ -1,0 +1,66 @@
+  189  cd 20230410
+  190  mkdir 0
+  191  cd 0
+  193  pip install babel
+  194  echo $PATH
+  195  pybabel
+  210  cal | python3 counter.py 
+  211  pybabel extract --help
+  212  pybabel extract -o counter.pot counter.py 
+  213  nano counter.pot 
+  214  pybabel init --help
+  215  pybabel init -i counter.pot -D counter -d po -l ru
+  216  python3 counter.py 
+  218  nano po/ru/LC_MESSAGES/counter.po 
+  219  pybabel compile -D counter -d po -l ru
+  220  python3 counter.py < cal
+  221  cal | python3 counter.py
+  222  locale
+  223  pybabel compile -D counter -d po -l ru
+  224  cal | python3 counter.py
+  225  LC_ALL=ru_RU.UTF-8
+  228  cal | python3 counter.py
+  229  ls
+  230  ls po
+  231  ls po/ru/
+  232  ls po/ru/LC_MESSAGES/
+  234  nano po/ru/LC_MESSAGES/counter.po
+  235  pybabel compile -D counter -d po -l ru
+  238  cal | python3 counter.py 
+  240  nano counter.pot
+  241  nano po/ru/LC_MESSAGES/counter.po
+  243  cal | python3 counter.py 
+  244  pybabel extract -o counter.pot counter.py
+  245  pybabel update -D counter -d po -i counter.pot -l ru
+  247  nano po/ru/LC_MESSAGES/counter.po
+  248  pybabel compile -D counter -d po -l ru
+  249  cal | LC_ALL=C python3 counter.py 
+  250  nano po/ru/LC_MESSAGES/counter.po
+  251  cal | LC_ALL=C python3 counter.py 
+  252  cal | python3 counter.py 
+  253  pybabel compile -D counter -d po -l ru
+  254  cal | python3 counter.py 
+  255  cal | LC_ALL=C python3 counter.py 
+  256  pybabel compile -D counter -d po -l ru
+  257  cal | python3 counter.py 
+  258  pybabel compile -D counter -d po -l ru
+  259  cal | python3 counter.py 
+  260  pybabel compile -D counter -d po -l ru
+  261  cal | python3 counter.py 
+  262  pybabel compile -D counter -d po -l ru
+  263  cal | python3 counter.py 
+  264  python3 counter.py 
+  265  pybabel extract -o counter.pot counter.py
+  266  pybabel update -D counter -d po -i counter.pot -l ru
+  267  nano po/ru/LC_MESSAGES/counter.po
+  268  pybabel compile -D counter -d po -l ru
+  269  cal | python3 counter.py 
+  270  nano po/ru/LC_MESSAGES/counter.po
+  271  pybabel compile -D counter -d po -l ru
+  272  cal | python3 counter.py 
+  273  python3 counter.py 
+  274  cal | LC_ALL=C python3 counter.py 
+  275  cal | python3 counter.py 
+  276  python3 counter.py 
+  277  history
+  278  history | tail -90 > hist.txt
