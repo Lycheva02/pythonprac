@@ -178,6 +178,9 @@ class Gameplay():
                                 if i == nm:
                                     continue
                                 await iq.put(nm + ': ' + args)
+                        case ['LOCALE', arg]:
+                            ans = "Set up locale: {}".format(arg)
+                            await self.clients[nm].put(ans)
                         case ['quit']:
                             break
                 elif t is receive:

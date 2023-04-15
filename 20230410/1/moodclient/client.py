@@ -9,6 +9,7 @@ import shlex
 import cmd
 import socket
 import readline
+import locale
 
 custom_cow = read_dot_cow(StringIO('''
 $the_cow = <<EOC;
@@ -161,6 +162,12 @@ class Client_Gameplay(cmd.Cmd):
     def do_sayall(self, args):
         """Send message to all players."""
         self.socket.send((shlex.join(["SAYALL", str(args)]) + '\n').encode())
+    def do_locale(self, args):
+        """Set locale: ru or en_ng"""
+        if args not in locale.locale_alias:
+            print("Invalid locale name")
+            return 0
+        self.socket.send((shlex.join(["LOCALE", str(args)]) + '\n').encode())
 
     def do_quit(self, args):
         """Exit the game."""
