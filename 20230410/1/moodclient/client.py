@@ -192,7 +192,7 @@ class Client_Gameplay(cmd.Cmd):
                 data = self.socket.recv(1024).decode().strip()
             except OSError:
                 break
-            if data.startswith("Moved ") and len(data.split('\n')) > 1 or data.startswith("MONSTER"):
+            if data.startswith("Moved ") and len(data.split('\n')) > 1 or data.startswith("MONSTER") or data.startswith("Выполнено ") and len(data.split('\n')) > 1:
                 data = data.split('\n')
                 if data[0] != "MONSTER":
                     print(f"{data[0]}\n{self.prompt}{readline.get_line_buffer()}", end='', flush=True)

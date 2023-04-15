@@ -1,0 +1,112 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-04-16 01:01+0300\n"
+"PO-Revision-Date: 2023-04-15 23:11+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: server.py:43
+msgid "sword"
+msgstr "мечом"
+
+#: server.py:43
+msgid "spear"
+msgstr "пикой"
+
+#: server.py:43
+msgid "axe"
+msgstr "топором"
+
+#: server.py:77
+msgid "Added monster {} to ({}, {}) saying {} with {} hp"
+msgstr "Добавлен монстр {} в ячейку ({}, {}), говорящий {} с {} очками здоровья"
+
+#: server.py:79
+msgid ""
+"\n"
+"Replaced the old monster\n"
+msgstr ""
+"\n"
+"Заменён старый монстр\n"
+
+#: server.py:99 server.py:183
+msgid "No {} here"
+msgstr "Здесь нет {}"
+
+#: server.py:102
+msgid "{} attacked {} with {}, damage {} hp"
+msgstr "{} атаковал {} {}, урон {} очков здоровья"
+
+#: server.py:104
+msgid ""
+"\n"
+"{} now has {}\n"
+msgstr ""
+"\n"
+"Здоровье {} теперь {}\n"
+
+#: server.py:106
+msgid ""
+"\n"
+"{} died\n"
+msgstr ""
+"\n"
+"{} погиб\n"
+
+#: server.py:114
+msgid "down"
+msgstr "вниз"
+
+#: server.py:114
+msgid "up"
+msgstr "вверх"
+
+#: server.py:114
+msgid "right"
+msgstr "вправо"
+
+#: server.py:114
+msgid "left"
+msgstr "влево"
+
+#: server.py:127
+msgid "{} moved one cell {}"
+msgstr "{} переместился на одну ячейку {}"
+
+#: server.py:153
+msgid "connection refused"
+msgstr "отказано в соединении"
+
+#: server.py:160
+msgid "{} joined"
+msgstr "{} присоединился"
+
+#: server.py:171
+msgid "Moved to ({}, {})"
+msgstr "Выполнено перемещение на ({}, {})"
+
+#: server.py:200
+msgid "Set up locale: {}"
+msgstr "Установлена локаль: {}"
+
+#: server.py:214
+msgid "{} exit"
+msgstr "{} покинул игру"
+
+#~ msgid "Set up locale: {}"
+#~ msgstr "Установлена локаль: {}"
+

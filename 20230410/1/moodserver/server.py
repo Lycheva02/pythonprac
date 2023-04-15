@@ -6,10 +6,11 @@ import asyncio
 import random
 import gettext
 import os
+import locale
 
 popath = os.path.join(os.path.dirname(__file__), "po")
-translation = gettext.translation("counter", popath, fallback=True)
-_, ngettext = translation.gettext, translation.ngettext
+translations = {'en_NG.UTF-8': gettext.translation("moodserver", popath, fallback=True), 'ru_RU.UTF-8': gettext.translation("moodserver", popath, languages=['ru'])}
+
 
 
 class Monster:
@@ -38,7 +39,8 @@ class Gameplay():
     x, y = 0, 0
     clients = {}
     players = {}
-    weapons = {10: 'sword', 15: 'spear', 20: 'axe'}
+    locales = {}
+    weapons = {10: gettext.gettext('sword'), 15: gettext.gettext('spear'), 20: gettext.gettext('axe')}
 
     def encounter(self, nm):
         """
@@ -53,7 +55,7 @@ class Gameplay():
         mon = self.gamefield[x_coord][y_coord]
         return [mon.name, mon.hello]
 
-    def addmon(self, name, hello, hp, x, y):
+    def addmon(self, name, hello, hp, x, y, nm):
         """
         Add monster.
         
@@ -72,9 +74,9 @@ class Gameplay():
         """
         repl_flag = self.gamefield[x][y]
         self.gamefield[x][y] = Monster(name, hello, hp)
-        ans = "Added monster {} to ({}, {}) saying {} with {} hp".format(name, x, y, hello, hp)
+        ans = _("Added monster {} to ({}, {}) saying {} with {} hp").format(name, x, y, hello, hp)
         if repl_flag:
-            ans += "\nReplaced the old monster\n"
+            ans += _("\nReplaced the old monster\n")
         return ans
 
     def attack(self, nm, name, damage):
@@ -94,14 +96,14 @@ class Gameplay():
         x_coord, y_coord = self.players[nm]
         m = self.gamefield[x_coord][y_coord]
         if not m or m.name != name:
-            return "No {} here".format(name)
+            return _("No {} here").format(name)
         damage = min(damage, m.hp)
         m.hp -= damage
-        ans = "{} attacked {} with {}, damage {} hp".format(nm, m.name, weapon, damage)
+        ans = _("{} attacked {} with {}, damage {} hp").format(nm, m.name, weapon, damage)
         if m.hp:
-            ans += "\n{} now has {}\n".format(m.name, m.hp)
+            ans += _("\n{} now has {}\n").format(m.name, m.hp)
         else:
-            ans += "\n{} died\n".format(m.name)
+            ans += _("\n{} died\n").format(m.name)
             self.gamefield[x_coord][y_coord] = None
         return ans
 
@@ -109,7 +111,7 @@ class Gameplay():
         """
         Monster's movement realisation.
         """
-        variants = {(0, 1): 'down', (0, -1): 'up', (1, 0): 'right', (-1, 0): 'left'}
+        variants = {(0, 1): gettext.gettext('down'), (0, -1): gettext.gettext('up'), (1, 0): gettext.gettext('right'), (-1, 0): gettext.gettext('left')}
         while True:
             mon_places = [[x, y] for x in range(10) for y in range(10) if self.gamefield[x][y] is not None]
             if mon_places:
@@ -122,7 +124,7 @@ class Gameplay():
                 mon = self.gamefield[mon_pos[0]][mon_pos[1]]
                 self.gamefield[mon_pos[0]][mon_pos[1]] = None
                 self.gamefield[x_new][y_new] = mon
-                ans = "{} moved one cell {}".format(mon.name, variants[direction])
+                ans = _("{} moved one cell {}").format(mon.name, variants[direction])
                 for i, iq in self.clients.items():
                     await iq.put(ans)
                 for pl, ppos in self.players.items():
@@ -147,12 +149,15 @@ class Gameplay():
                     match data:
                         case ['login', name]:
                             if name in self.clients:
-                                writer.write('connection refused'.encode())
+                                translations[self.locales[nm]].install()
+                                writer.write(_('connection refused').encode())
                                 await writer.drain()
                                 continue
                             nm = name
+                            self.locales[nm] = 'en_NG.UTF-8'
                             for i, iq in self.clients.items():
-                                await iq.put("{} joined".format(nm))
+                                translations[self.locales[i]].install()
+                                await iq.put(_("{} joined").format(nm))
                             self.clients[nm] = q
                             self.players[nm] = [0, 0]
                             writer.write('\n'.encode())
@@ -162,20 +167,25 @@ class Gameplay():
                             self.players[nm][0] = (x_coord + int(x_chng)) % 10
                             self.players[nm][1] = (y_coord + int(y_chng)) % 10
                             x_coord, y_coord = self.players[nm]
-                            ans = "Moved to ({}, {})".format(x_coord, y_coord)
+                            translations[self.locales[nm]].install()
+                            ans = _("Moved to ({}, {})").format(x_coord, y_coord)
                             if self.gamefield[x_coord][y_coord] is not None:
                                 ans += "\n{}".format(shlex.join(self.encounter(nm)))
                             await self.clients[nm].put(ans)
                         case ['addmon', name, hello, hp, x_str, y_str]:
                             ans = self.addmon(name, hello, int(hp), int(x_str), int(y_str))
                             for i, iq in self.clients.items():
+                                translations[self.locales[i]].install()
                                 await iq.put(ans)
                         case ['attack', name, damage]:
                             ans = self.attack(nm, name, int(damage))
-                            if ans == f"No {name} here":
+                            translations[self.locales[nm]].install()
+                            if ans == _("No {} here").format(name):
+                                locale.setlocale(locale.LC_ALL, self.locales[nm])
                                 await self.clients[nm].put(ans)
                             else:
                                 for i, iq in self.clients.items():
+                                    locale.setlocale(locale.LC_ALL, self.locales[i])
                                     await iq.put(ans)
                         case ['SAYALL', args]:
                             if args[0] == args[-1] == '"':
@@ -185,7 +195,9 @@ class Gameplay():
                                     continue
                                 await iq.put(nm + ': ' + args)
                         case ['LOCALE', arg]:
-                            ans = "Set up locale: {}".format(arg)
+                            self.locales[nm] = locale.locale_alias[arg]
+                            translations[self.locales[nm]].install()
+                            ans = _("Set up locale: {}").format(arg)
                             await self.clients[nm].put(ans)
                         case ['quit']:
                             break
@@ -198,6 +210,7 @@ class Gameplay():
         if nm is not None:
             del self.clients[nm]
             for i, iq in self.clients.items():
-                await iq.put("{} exit".format(nm))
+                translations[self.locales[nm]].install()
+                await iq.put(_("{} exit").format(nm))
         writer.close()
         await writer.wait_closed()
