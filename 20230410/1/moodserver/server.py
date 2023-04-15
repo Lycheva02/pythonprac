@@ -40,7 +40,7 @@ class Gameplay():
     clients = {}
     players = {}
     locales = {}
-    weapons = {10: gettext.gettext('sword'), 15: gettext.gettext('spear'), 20: gettext.gettext('axe')}
+    weapons = {10: 'sword', 15: 'spear', 20: 'axe'}
 
     def encounter(self, nm):
         """
@@ -55,7 +55,7 @@ class Gameplay():
         mon = self.gamefield[x_coord][y_coord]
         return [mon.name, mon.hello]
 
-    def addmon(self, name, hello, hp, x, y, nm):
+    def addmon(self, name, hello, hp, x, y):
         """
         Add monster.
         
@@ -74,10 +74,10 @@ class Gameplay():
         """
         repl_flag = self.gamefield[x][y]
         self.gamefield[x][y] = Monster(name, hello, hp)
-        ans = _("Added monster {} to ({}, {}) saying {} with {} hp").format(name, x, y, hello, hp)
+        ans = "Added monster {} to ({}, {}) saying {} with {} hp"
         if repl_flag:
-            ans += _("\nReplaced the old monster\n")
-        return ans
+            ans += "\nReplaced the old monster\n"
+        return [ans, [name, x, y, hello, hp]]
 
     def attack(self, nm, name, damage):
         """
@@ -92,18 +92,18 @@ class Gameplay():
         :return: message for player.
         :rtype: str
         """
-        weapon = self.weapons[damage]
+        weapon = damage
         x_coord, y_coord = self.players[nm]
         m = self.gamefield[x_coord][y_coord]
         if not m or m.name != name:
-            return _("No {} here").format(name)
+            return ["No {} here", name]
         damage = min(damage, m.hp)
         m.hp -= damage
-        ans = _("{} attacked {} with {}, damage {} hp").format(nm, m.name, weapon, damage)
+        ans = ["{} attacked {} with {}, damage {} hp", [nm, m.name, self.weapons[weapon], damage]]
         if m.hp:
-            ans += _("\n{} now has {}\n").format(m.name, m.hp)
+            ans = [ans[0] + "\n{} now has {}\n", ans[1] + [m.name, m.hp]]
         else:
-            ans += _("\n{} died\n").format(m.name)
+            ans = _[ans[0] + "\n{} died\n", ans[1] + m.name]
             self.gamefield[x_coord][y_coord] = None
         return ans
 
@@ -111,7 +111,7 @@ class Gameplay():
         """
         Monster's movement realisation.
         """
-        variants = {(0, 1): gettext.gettext('down'), (0, -1): gettext.gettext('up'), (1, 0): gettext.gettext('right'), (-1, 0): gettext.gettext('left')}
+        variants = {(0, 1): 'down', (0, -1): 'up', (1, 0): 'right', (-1, 0): 'left'}
         while True:
             mon_places = [[x, y] for x in range(10) for y in range(10) if self.gamefield[x][y] is not None]
             if mon_places:
@@ -124,9 +124,10 @@ class Gameplay():
                 mon = self.gamefield[mon_pos[0]][mon_pos[1]]
                 self.gamefield[mon_pos[0]][mon_pos[1]] = None
                 self.gamefield[x_new][y_new] = mon
-                ans = _("{} moved one cell {}").format(mon.name, variants[direction])
+                ans = ["{} moved one cell {}", [mon.name, variants[direction]]]
                 for i, iq in self.clients.items():
-                    await iq.put(ans)
+                    translations[self.locales[i]].install()
+                    await iq.put(_(ans[0]).format(ans[1][0], _(ans[1][1])))
                 for pl, ppos in self.players.items():
                     if ppos == [x_new, y_new]:
                         ans = "MONSTER\n{}".format(shlex.join(self.encounter(pl)))
@@ -176,17 +177,17 @@ class Gameplay():
                             ans = self.addmon(name, hello, int(hp), int(x_str), int(y_str))
                             for i, iq in self.clients.items():
                                 translations[self.locales[i]].install()
-                                await iq.put(ans)
+                                await iq.put(_(ans[0]).format(*(ans[1])))
                         case ['attack', name, damage]:
                             ans = self.attack(nm, name, int(damage))
                             translations[self.locales[nm]].install()
-                            if ans == _("No {} here").format(name):
-                                locale.setlocale(locale.LC_ALL, self.locales[nm])
-                                await self.clients[nm].put(ans)
+                            if ans[0] == "No {} here":
+                                translations[self.locales[nm]].install()
+                                await self.clients[nm].put(_(ans[0]).format(*(ans[1])))
                             else:
                                 for i, iq in self.clients.items():
-                                    locale.setlocale(locale.LC_ALL, self.locales[i])
-                                    await iq.put(ans)
+                                    translations[self.locales[i]].install()
+                                    await iq.put(_(ans[0]).format(*(ans[1][:2]), _(ans[1][2]), *(ans[1][3:])))
                         case ['SAYALL', args]:
                             if args[0] == args[-1] == '"':
                                 args = args[1:-1]
@@ -210,7 +211,7 @@ class Gameplay():
         if nm is not None:
             del self.clients[nm]
             for i, iq in self.clients.items():
-                translations[self.locales[nm]].install()
+                translations[self.locales[i]].install()
                 await iq.put(_("{} exit").format(nm))
         writer.close()
         await writer.wait_closed()
