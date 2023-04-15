@@ -4,6 +4,12 @@ Server realisation.
 import shlex
 import asyncio
 import random
+import gettext
+import os
+
+popath = os.path.join(os.path.dirname(__file__), "po")
+translation = gettext.translation("counter", popath, fallback=True)
+_, ngettext = translation.gettext, translation.ngettext
 
 
 class Monster:
@@ -66,7 +72,7 @@ class Gameplay():
         """
         repl_flag = self.gamefield[x][y]
         self.gamefield[x][y] = Monster(name, hello, hp)
-        ans = f"Added monster {name} to ({x}, {y}) saying {hello} with {hp} hp"
+        ans = "Added monster {} to ({}, {}) saying {} with {} hp".format(name, x, y, hello, hp)
         if repl_flag:
             ans += "\nReplaced the old monster\n"
         return ans
@@ -88,14 +94,14 @@ class Gameplay():
         x_coord, y_coord = self.players[nm]
         m = self.gamefield[x_coord][y_coord]
         if not m or m.name != name:
-            return f"No {name} here"
+            return "No {} here".format(name)
         damage = min(damage, m.hp)
         m.hp -= damage
-        ans = f"{nm} attacked {m.name} with {weapon}, damage {damage} hp"
+        ans = "{} attacked {} with {}, damage {} hp".format(nm, m.name, weapon, damage)
         if m.hp:
-            ans += f"\n{m.name} now has {m.hp}\n"
+            ans += "\n{} now has {}\n".format(m.name, m.hp)
         else:
-            ans += f"\n{m.name} died\n"
+            ans += "\n{} died\n".format(m.name)
             self.gamefield[x_coord][y_coord] = None
         return ans
 
@@ -116,12 +122,12 @@ class Gameplay():
                 mon = self.gamefield[mon_pos[0]][mon_pos[1]]
                 self.gamefield[mon_pos[0]][mon_pos[1]] = None
                 self.gamefield[x_new][y_new] = mon
-                ans = f"{mon.name} moved one cell {variants[direction]}"
+                ans = "{} moved one cell {}".format(mon.name, variants[direction])
                 for i, iq in self.clients.items():
                     await iq.put(ans)
                 for pl, ppos in self.players.items():
                     if ppos == [x_new, y_new]:
-                        ans = f"MONSTER\n{shlex.join(self.encounter(pl))}"
+                        ans = "MONSTER\n{}".format(shlex.join(self.encounter(pl)))
                         await self.clients[pl].put(ans)
             await asyncio.sleep(30)
    
@@ -146,7 +152,7 @@ class Gameplay():
                                 continue
                             nm = name
                             for i, iq in self.clients.items():
-                                await iq.put(f"{nm} joined")
+                                await iq.put("{} joined".format(nm))
                             self.clients[nm] = q
                             self.players[nm] = [0, 0]
                             writer.write('\n'.encode())
@@ -156,9 +162,9 @@ class Gameplay():
                             self.players[nm][0] = (x_coord + int(x_chng)) % 10
                             self.players[nm][1] = (y_coord + int(y_chng)) % 10
                             x_coord, y_coord = self.players[nm]
-                            ans = f"Moved to ({x_coord}, {y_coord})"
+                            ans = "Moved to ({}, {})".format(x_coord, y_coord)
                             if self.gamefield[x_coord][y_coord] is not None:
-                                ans += f"\n{shlex.join(self.encounter(nm))}"
+                                ans += "\n{}".format(shlex.join(self.encounter(nm)))
                             await self.clients[nm].put(ans)
                         case ['addmon', name, hello, hp, x_str, y_str]:
                             ans = self.addmon(name, hello, int(hp), int(x_str), int(y_str))
@@ -185,13 +191,13 @@ class Gameplay():
                             break
                 elif t is receive:
                     receive = asyncio.create_task(q.get())
-                    writer.write(f"{t.result()}\n".encode())
+                    writer.write("{}\n".format(t.result()).encode())
                     await writer.drain()
         send.cancel()
         receive.cancel()
         if nm is not None:
             del self.clients[nm]
             for i, iq in self.clients.items():
-                await iq.put(f"{nm} exit")
+                await iq.put("{} exit".format(nm))
         writer.close()
         await writer.wait_closed()
