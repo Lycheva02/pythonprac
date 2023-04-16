@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-04-16 01:47+0300\n"
+"POT-Creation-Date: 2023-04-16 14:07+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,26 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
-
-#: server.py:115
-msgid "down"
-msgstr ""
-
-#: server.py:115
-msgid "up"
-msgstr ""
-
-#: server.py:115
-msgid "right"
-msgstr ""
-
-#: server.py:115
-msgid "left"
-msgstr ""
-
-#: server.py:128
-msgid "{} moved one cell {}"
-msgstr ""
 
 #: server.py:154
 msgid "connection refused"
@@ -48,6 +28,12 @@ msgstr ""
 #: server.py:172
 msgid "Moved to ({}, {})"
 msgstr ""
+
+#: server.py:180
+msgid "{} hp"
+msgid_plural "{} hp"
+msgstr[0] ""
+msgstr[1] ""
 
 #: server.py:201
 msgid "Set up locale: {}"

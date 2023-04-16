@@ -74,7 +74,7 @@ class Gameplay():
         """
         repl_flag = self.gamefield[x][y]
         self.gamefield[x][y] = Monster(name, hello, hp)
-        ans = "Added monster {} to ({}, {}) saying {} with {} hp"
+        ans = "Added monster {} to ({}, {}) saying {} with {}"
         if repl_flag:
             ans += "\nReplaced the old monster\n"
         return [ans, [name, x, y, hello, hp]]
@@ -99,11 +99,11 @@ class Gameplay():
             return ["No {} here", name]
         damage = min(damage, m.hp)
         m.hp -= damage
-        ans = ["{} attacked {} with {}, damage {} hp", [nm, m.name, self.weapons[weapon], damage]]
+        ans = ["{} attacked {} with {}, damage {}", [nm, m.name, self.weapons[weapon], damage]]
         if m.hp:
             ans = [ans[0] + "\n{} now has {}\n", ans[1] + [m.name, m.hp]]
         else:
-            ans = _[ans[0] + "\n{} died\n", ans[1] + m.name]
+            ans = [ans[0] + "\n{} died\n", ans[1] + [m.name]]
             self.gamefield[x_coord][y_coord] = None
         return ans
 
@@ -177,17 +177,19 @@ class Gameplay():
                             ans = self.addmon(name, hello, int(hp), int(x_str), int(y_str))
                             for i, iq in self.clients.items():
                                 translations[self.locales[i]].install()
-                                await iq.put(_(ans[0]).format(*(ans[1])))
+                                ngettext = translations[self.locales[i]].ngettext
+                                await iq.put(_(ans[0]).format(*(ans[1][:-1]), ngettext("{} hp", "{} hp", ans[1][-1]).format(ans[1][-1])))
                         case ['attack', name, damage]:
                             ans = self.attack(nm, name, int(damage))
                             translations[self.locales[nm]].install()
                             if ans[0] == "No {} here":
                                 translations[self.locales[nm]].install()
-                                await self.clients[nm].put(_(ans[0]).format(*(ans[1])))
+                                await self.clients[nm].put(_(ans[0]).format(ans[1]))
                             else:
                                 for i, iq in self.clients.items():
                                     translations[self.locales[i]].install()
-                                    await iq.put(_(ans[0]).format(*(ans[1][:2]), _(ans[1][2]), *(ans[1][3:])))
+                                    ngettext = translations[self.locales[i]].ngettext
+                                    await iq.put(_(ans[0]).format(*(ans[1][:2]), _(ans[1][2]), ngettext("{} hp", "{} hp", ans[1][3]).format(ans[1][3]),*(ans[1][4:])))
                         case ['SAYALL', args]:
                             if args[0] == args[-1] == '"':
                                 args = args[1:-1]

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-04-16 01:47+0300\n"
+"POT-Creation-Date: 2023-04-16 14:07+0300\n"
 "PO-Revision-Date: 2023-04-15 23:11+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ru\n"
@@ -18,26 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
-
-#: server.py:115
-msgid "down"
-msgstr "вниз"
-
-#: server.py:115
-msgid "up"
-msgstr "вверх"
-
-#: server.py:115
-msgid "right"
-msgstr "вправо"
-
-#: server.py:115
-msgid "left"
-msgstr "влево"
-
-#: server.py:128
-msgid "{} moved one cell {}"
-msgstr "{} переместился на одну ячейку {}"
 
 #: server.py:154
 msgid "connection refused"
@@ -51,6 +31,13 @@ msgstr "{} присоединился"
 msgid "Moved to ({}, {})"
 msgstr "Выполнено перемещение на ({}, {})"
 
+#: server.py:192
+msgid "{} hp"
+msgid_plural "{} hp"
+msgstr[0] "{} очко здоровья"
+msgstr[1] "{} очка здоровья"
+msgstr[2] "{} очков здоровья"
+
 #: server.py:201
 msgid "Set up locale: {}"
 msgstr "Установлена локаль: {}"
@@ -59,23 +46,14 @@ msgstr "Установлена локаль: {}"
 msgid "{} exit"
 msgstr "{} покинул игру"
 
-#~ msgid "Set up locale: {}"
-#~ msgstr "Установлена локаль: {}"
+msgid "sword"
+msgstr "мечом"
 
-#~ msgid "sword"
-#~ msgstr "мечом"
+msgid "spear"
+msgstr "пикой"
 
-#~ msgid "spear"
-#~ msgstr "пикой"
-
-#~ msgid "axe"
-#~ msgstr "топором"
-
-msgid "Added monster {} to ({}, {}) saying {} with {} hp"
-msgstr "Добавлен монстр {} в ячейку ({}, {}), говорящий {} с {} очками здоровья"
-
-msgid "Added monster {} to ({}, {}) saying {} with {} hp\nReplaced the old monster\n"
-msgstr "Добавлен монстр {} в ячейку ({}, {}), говорящий {} с {} очками здоровья\nЗаменён старый монстр\n"
+msgid "axe"
+msgstr "топором"
 
 #~ msgid ""
 #~ "\n"
@@ -84,29 +62,63 @@ msgstr "Добавлен монстр {} в ячейку ({}, {}), говоря�
 #~ "\n"
 #~ "Заменён старый монстр\n"
 
-#~ msgid "No {} here"
-#~ msgstr "Здесь нет {}"
+msgid "No {} here"
+msgstr "Здесь нет {}"
 
-msgid "{} attacked {} with {}, damage {} hp"
-msgstr "{} атаковал {} {}, урон {} очков здоровья"
+msgid ""
+"\n"
+"{} now has {}\n"
+msgstr ""
+"\n"
+"Здоровье {} теперь {}\n"
 
-msgid "{} attacked {} with {}, damage {} hp\n{} now has {}\n"
-msgstr "{} атаковал {} {}, урон {} очков здоровья\n у {} теперь {}\n"
+msgid ""
+"\n"
+"{} died\n"
+msgstr ""
+"\n"
+"{} погиб\n"
 
-msgid "{} attacked {} with {}, damage {} hp\n{} died\n"
-msgstr "{} атаковал {} {}, урон {} очков здоровья, {} погиб"
+msgid "down"
+msgstr "вниз"
+
+msgid "up"
+msgstr "вверх"
+
+msgid "right"
+msgstr "вправо"
+
+msgid "left"
+msgstr "влево"
+
+msgid "{} moved one cell {}"
+msgstr "{} переместился на одну ячейку {}"
+
+msgid "Added monster {} to ({}, {}) saying {} with {}"
+msgstr "Добавлен монстр {} в ячейку ({}, {}), говорящий {}, {}"
 
 #~ msgid ""
-#~ "\n"
-#~ "{} now has {}\n"
+#~ "Added monster {} to ({}, {}) saying {} with {} hp\n"
+#~ "Replaced the old monster\n"
 #~ msgstr ""
-#~ "\n"
-#~ "Здоровье {} теперь {}\n"
+#~ "Добавлен монстр {} в ячейку ({}, "
+#~ "{}), говорящий {} с {} очками "
+#~ "здоровья\n"
+#~ "Заменён старый монстр\n"
 
-#~ msgid ""
-#~ "\n"
-#~ "{} died\n"
-#~ msgstr ""
-#~ "\n"
-#~ "{} погиб\n"
+#~ msgid "{} attacked {} with {}, damage {} hp"
+#~ msgstr "{} атаковал {} {}, урон {} очков здоровья"
+
+msgid ""
+"{} attacked {} with {}, damage {}\n"
+"{} now has {}\n"
+msgstr ""
+"{} атаковал {} {}, урон {}\n"
+"Здоровье {} теперь {}\n"
+
+msgid ""
+"{} attacked {} with {}, damage {}\n"
+"{} died\n"
+msgstr "{} атаковал {} {}, урон {}\n"
+"{} погиб\n"
 
