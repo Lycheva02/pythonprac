@@ -67,41 +67,44 @@ class Client_Gameplay(cmd.Cmd):
         self.name = name
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(('localhost', 8080))
-        self.socket.send(f'login {name}\n'.encode())
+        self.send_srv(f'login {name}\n')
         data = self.socket.recv(1024).decode().strip()
         if data == 'connection refused':
             self.socket.shutdown(socket.SHUT_RDWR)
             self.socket.close()
             self.ON = False
             return 1
+    
+    def send_srv(self, msg):
+        self.socket.send(msg.encode())
 
     def do_left(self, args):
         """Move one step left."""
         if args:
             print("Invalid arguments")
             return 0
-        self.socket.send('move -1 0\n'.encode())
+        self.send_srv('move -1 0\n')
 
     def do_right(self, args):
         """Move one step right."""
         if args:
             print("Invalid arguments")
             return 0
-        self.socket.send('move 1 0\n'.encode())
+        self.send_srv('move 1 0\n')
 
     def do_up(self, args):
         """Move one step up."""
         if args:
             print("Invalid arguments")
             return 0
-        self.socket.send('move 0 -1\n'.encode())
+        self.send_srv('move 0 -1\n')
 
     def do_down(self, args):
         """Move one step down."""
         if args:
             print("Invalid arguments")
             return 0
-        self.socket.send('move 0 1\n'.encode())
+        self.send_srv('move 0 1\n')
 
     def do_addmon(self, args):
         """
@@ -126,7 +129,7 @@ class Client_Gameplay(cmd.Cmd):
         if hp <= 0:
             print("Invalid hp argument")
         msg = shlex.join(["addmon", name, hello, str(hp), str(x), str(y)]) + '\n'
-        self.socket.send(msg.encode())
+        self.send_srv(msg)
 
     def do_attack(self, args):
         """Attack the monster: attack <name> [with <weapon>]."""
@@ -145,7 +148,7 @@ class Client_Gameplay(cmd.Cmd):
             print("Unknown weapon")
             return
         damage = self.weaponlist[args[1]]
-        self.socket.send((shlex.join(["attack", name, str(damage)]) + '\n').encode())
+        self.send_srv((shlex.join(["attack", name, str(damage)]) + '\n'))
 
     def complete_attack(self, prefix, line, start, end):
         """Attack command completion."""
@@ -161,17 +164,17 @@ class Client_Gameplay(cmd.Cmd):
 
     def do_sayall(self, args):
         """Send message to all players."""
-        self.socket.send((shlex.join(["SAYALL", str(args)]) + '\n').encode())
+        self.send_srv((shlex.join(["SAYALL", str(args)]) + '\n'))
     def do_locale(self, args):
         """Set locale: ru or en_ng"""
         if args not in locale.locale_alias:
             print("Invalid locale name")
             return 0
-        self.socket.send((shlex.join(["LOCALE", str(args)]) + '\n').encode())
+        self.send_srv((shlex.join(["LOCALE", str(args)]) + '\n'))
 
     def do_quit(self, args):
         """Exit the game."""
-        self.socket.send('quit\n'.encode())
+        self.send_srv('quit\n')
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
         self.ON = False
