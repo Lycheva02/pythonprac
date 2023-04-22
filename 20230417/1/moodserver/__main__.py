@@ -13,4 +13,8 @@ async def main():
     async with playing_server:
         await playing_server.serve_forever()
 
-asyncio.run(main())
+def start_game():
+    asyncio.run(main())
+ 
+if __name__ == '__main__':
+    start_game()

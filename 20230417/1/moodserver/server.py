@@ -74,7 +74,7 @@ class Gameplay():
         """
         repl_flag = self.gamefield[x][y]
         self.gamefield[x][y] = Monster(name, hello, hp)
-        ans = "Added monster {} to ({}, {}) saying {} with {}"
+        ans = "added monster {} to ({}, {}) saying {} with {}"
         if repl_flag:
             ans += "\nReplaced the old monster\n"
         return [ans, [name, x, y, hello, hp]]
@@ -178,7 +178,7 @@ class Gameplay():
                             for i, iq in self.clients.items():
                                 translations[self.locales[i]].install()
                                 ngettext = translations[self.locales[i]].ngettext
-                                await iq.put(_(ans[0]).format(*(ans[1][:-1]), ngettext("{} hp", "{} hp", ans[1][-1]).format(ans[1][-1])))
+                                await iq.put(nm + ' ' + _(ans[0]).format(*(ans[1][:-1]), ngettext("{} hp", "{} hp", ans[1][-1]).format(ans[1][-1])))
                         case ['attack', name, damage]:
                             ans = self.attack(nm, name, int(damage))
                             translations[self.locales[nm]].install()
