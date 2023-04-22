@@ -1,0 +1,124 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-04-16 14:07+0300\n"
+"PO-Revision-Date: 2023-04-15 23:11+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+#: server.py:154
+msgid "connection refused"
+msgstr "отказано в соединении"
+
+#: server.py:161
+msgid "{} joined"
+msgstr "{} присоединился"
+
+#: server.py:172
+msgid "Moved to ({}, {})"
+msgstr "Выполнено перемещение на ({}, {})"
+
+#: server.py:192
+msgid "{} hp"
+msgid_plural "{} hp"
+msgstr[0] "{} очко здоровья"
+msgstr[1] "{} очка здоровья"
+msgstr[2] "{} очков здоровья"
+
+#: server.py:201
+msgid "Set up locale: {}"
+msgstr "Установлена локаль: {}"
+
+#: server.py:215
+msgid "{} exit"
+msgstr "{} покинул игру"
+
+msgid "sword"
+msgstr "мечом"
+
+msgid "spear"
+msgstr "пикой"
+
+msgid "axe"
+msgstr "топором"
+
+#~ msgid ""
+#~ "\n"
+#~ "Replaced the old monster\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Заменён старый монстр\n"
+
+msgid "No {} here"
+msgstr "Здесь нет {}"
+
+msgid ""
+"\n"
+"{} now has {}\n"
+msgstr ""
+"\n"
+"Здоровье {} теперь {}\n"
+
+msgid ""
+"\n"
+"{} died\n"
+msgstr ""
+"\n"
+"{} погиб\n"
+
+msgid "down"
+msgstr "вниз"
+
+msgid "up"
+msgstr "вверх"
+
+msgid "right"
+msgstr "вправо"
+
+msgid "left"
+msgstr "влево"
+
+msgid "{} moved one cell {}"
+msgstr "{} переместился на одну ячейку {}"
+
+msgid "Added monster {} to ({}, {}) saying {} with {}"
+msgstr "Добавлен монстр {} в ячейку ({}, {}), говорящий {}, {}"
+
+#~ msgid ""
+#~ "Added monster {} to ({}, {}) saying {} with {} hp\n"
+#~ "Replaced the old monster\n"
+#~ msgstr ""
+#~ "Добавлен монстр {} в ячейку ({}, "
+#~ "{}), говорящий {} с {} очками "
+#~ "здоровья\n"
+#~ "Заменён старый монстр\n"
+
+#~ msgid "{} attacked {} with {}, damage {} hp"
+#~ msgstr "{} атаковал {} {}, урон {} очков здоровья"
+
+msgid ""
+"{} attacked {} with {}, damage {}\n"
+"{} now has {}\n"
+msgstr ""
+"{} атаковал {} {}, урон {}\n"
+"Здоровье {} теперь {}\n"
+
+msgid ""
+"{} attacked {} with {}, damage {}\n"
+"{} died\n"
+msgstr "{} атаковал {} {}, урон {}\n"
+"{} погиб\n"
+
