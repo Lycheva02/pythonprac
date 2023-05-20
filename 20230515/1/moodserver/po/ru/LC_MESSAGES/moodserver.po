@@ -94,8 +94,8 @@ msgstr "влево"
 msgid "{} moved one cell {}"
 msgstr "{} переместился на одну ячейку {}"
 
-msgid "Added monster {} to ({}, {}) saying {} with {}"
-msgstr "Добавлен монстр {} в ячейку ({}, {}), говорящий {}, {}"
+msgid "added monster {} to ({}, {}) saying {} with {}"
+msgstr "добавил монстра {} в ячейку ({}, {}), говорящий {}, {}"
 
 #~ msgid ""
 #~ "Added monster {} to ({}, {}) saying {} with {} hp\n"

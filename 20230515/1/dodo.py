@@ -15,11 +15,19 @@ def task_pot():
 def task_po():
 	"""Update translation"""
 	return {
-		'actions': ['pybabel update -D moodserver -d moodserver/po -i moodserver/moodserver.pot'],
+		'actions': ['pybabel update -D moodserver -d moodserver/po -i moodserver/moodserver.pot', 'cp po_sample moodserver/po/ru/LC_MESSAGES/moodserver.po'],
 		'file_dep': ['moodserver/moodserver.pot'],
 		'targets': ['moodserver/po/ru/LC_MESSAGES/moodserver.po'],
 		}
-
+'''
+def task_copy_po():
+	"""Copy sample"""
+	return {
+		'actions': ['cp po_sample moodserver/po/ru/LC_MESSAGES/moodserver.po'],
+		'file_dep': ['po_sample'],
+		'task_dep': ['po'],
+		}
+'''
 def task_i18n():
 	"""Compile translation"""
 	return {
