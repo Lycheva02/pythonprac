@@ -20,4 +20,4 @@ requires = ["alabaster", "Babel", "build", "doit", "flake8", "pybabel", "pycodes
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-moodclient = "client:main"
+moodclient = "moodclient.client:main"

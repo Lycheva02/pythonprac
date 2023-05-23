@@ -1,2 +1,2 @@
 [console_scripts]
-moodserver = server:main
+moodserver = moodserver.server:main

@@ -20,7 +20,7 @@ requires = ["alabaster", "Babel", "build", "doit", "flake8", "pybabel", "pycodes
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-moodserver = "server:main"
+moodserver = "moodserver.server:main"
 
 [tool.setuptools.package-data]
 moodserver = ["po/*/*/*.mo"]

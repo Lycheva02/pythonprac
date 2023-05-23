@@ -5,3 +5,6 @@ MoodServer.egg-info/dependency_links.txt
 MoodServer.egg-info/entry_points.txt
 MoodServer.egg-info/requires.txt
 MoodServer.egg-info/top_level.txt
+moodserver/__main__.py
+moodserver/server.py
+moodserver/po/ru/LC_MESSAGES/moodserver.mo

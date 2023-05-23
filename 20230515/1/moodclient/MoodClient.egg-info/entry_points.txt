@@ -1,2 +1,2 @@
 [console_scripts]
-moodclient = client:main
+moodclient = moodclient.client:main
