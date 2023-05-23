@@ -1,0 +1,26 @@
+[project]
+name = "MoodServer"
+version = "0.0.1"
+description = "Server for MOOD"
+requires-python = ">=3.10"
+authors = [{name = "Ekaterina Lycheva", email = "s02200433@gse.cs.msu.ru"}]
+keywords = ["mood", "project"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+]
+
+dependencies = ["python-cowsay>=1.1.0"]
+
+[project.urls]
+repository = "https://github.com/Lycheva02/pythonprac"
+
+[build-system]
+requires = ["alabaster", "Babel", "build", "doit", "flake8", "pybabel", "pycodestyle", "pydocstyle", "pyflakes", "python-cowsay", "setuptools", "Sphinx"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+moodserver = "server:main"
+
+[tool.setuptools.package-data]
+moodserver = ["po/*/*/*.mo"]

@@ -1,0 +1,2 @@
+[console_scripts]
+moodserver = server:main

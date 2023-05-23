@@ -1,0 +1,7 @@
+pyproject.toml
+MoodServer.egg-info/PKG-INFO
+MoodServer.egg-info/SOURCES.txt
+MoodServer.egg-info/dependency_links.txt
+MoodServer.egg-info/entry_points.txt
+MoodServer.egg-info/requires.txt
+MoodServer.egg-info/top_level.txt
