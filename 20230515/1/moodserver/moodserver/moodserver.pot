@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-05-20 12:11+0300\n"
+"POT-Creation-Date: 2023-05-24 17:48+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,29 +17,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: moodserver/server.py:154
+#: moodserver/moodserver/server.py:155
 msgid "connection refused"
 msgstr ""
 
-#: moodserver/server.py:161
+#: moodserver/moodserver/server.py:162
 msgid "{} joined"
 msgstr ""
 
-#: moodserver/server.py:172
+#: moodserver/moodserver/server.py:173
 msgid "Moved to ({}, {})"
 msgstr ""
 
-#: moodserver/server.py:181 moodserver/server.py:192
+#: moodserver/moodserver/server.py:182 moodserver/moodserver/server.py:193
 msgid "{} hp"
 msgid_plural "{} hp"
 msgstr[0] ""
 msgstr[1] ""
 
-#: moodserver/server.py:203
+#: moodserver/moodserver/server.py:204
 msgid "Set up locale: {}"
 msgstr ""
 
-#: moodserver/server.py:217
+#: moodserver/moodserver/server.py:218
 msgid "{} exit"
 msgstr ""
 

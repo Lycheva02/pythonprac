@@ -1,6 +1,6 @@
 Client technical documentation
 ==============================
 
-.. automodule:: moodclient.client
+.. automodule:: moodclient.moodclient.client
    :members:
    :private-members:

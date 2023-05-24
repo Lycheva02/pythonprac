@@ -8,32 +8,26 @@ DOIT_CONFIG = {'default_tasks': ['html']}
 def task_pot():
 	"""Extract translation"""
 	return {
-		'actions': ['pybabel extract --input-dirs moodserver/ -o moodserver/moodserver.pot'],
-		'targets': ['moodserver/moodserver.pot'],
+		'actions': ['pybabel extract --input-dirs moodserver/moodserver -o moodserver/moodserver/moodserver.pot', 'cp po_sample moodserver/moodserver/po/ru/LC_MESSAGES/moodserver.po'],
+		'targets': ['moodserver/moodserver/moodserver.pot'],
+		'clean': True,
 		}
 
 def task_po():
 	"""Update translation"""
 	return {
-		'actions': ['pybabel update -D moodserver -d moodserver/po -i moodserver/moodserver.pot', 'cp po_sample moodserver/po/ru/LC_MESSAGES/moodserver.po'],
-		'file_dep': ['moodserver/moodserver.pot'],
-		'targets': ['moodserver/po/ru/LC_MESSAGES/moodserver.po'],
+		'actions': ['pybabel update -D moodserver -d moodserver/moodserver/po -i moodserver/moodserver/moodserver.pot', 'cp po_sample moodserver/moodserver/po/ru/LC_MESSAGES/moodserver.po'],
+		'file_dep': ['moodserver/moodserver/moodserver.pot'],
+		'targets': ['moodserver/moodserver/po/ru/LC_MESSAGES/moodserver.po'],
+		'clean': True,
 		}
-'''
-def task_copy_po():
-	"""Copy sample"""
-	return {
-		'actions': ['cp po_sample moodserver/po/ru/LC_MESSAGES/moodserver.po'],
-		'file_dep': ['po_sample'],
-		'task_dep': ['po'],
-		}
-'''
+
 def task_i18n():
 	"""Compile translation"""
 	return {
-		'actions': ['pybabel compile -d moodserver/po -D moodserver'],
-		'file_dep': ['moodserver/po/ru/LC_MESSAGES/moodserver.po'],
-		'targets': ['moodserver/po/ru/LC_MESSAGES/moodserver.mo'],
+		'actions': ['pybabel compile -d moodserver/moodserver/po -D moodserver'],
+		'file_dep': ['moodserver/moodserver/po/ru/LC_MESSAGES/moodserver.po'],
+		'targets': ['moodserver/moodserver/po/ru/LC_MESSAGES/moodserver.mo'],
 		'clean': True,
 		}
 
@@ -52,6 +46,31 @@ def task_html():
 		'actions': ['make -C docs html'],
 		'task_dep': ['i18n'],
 		'targets': ['docs/build'],
-		'clean': [clean_targets, lambda: shutil.rmtree('docs/build')],
+		'clean': [lambda: shutil.rmtree('docs/build')],
 		}
 		
+def task_whlserver():
+	"""Make server wheel"""
+	return {
+		'actions': ['python3 -m build -n -w moodserver'],
+		'task_dep': ['i18n'],
+		'file_dep': ['moodserver/pyproject.toml', 'moodserver/moodserver/po/ru/LC_MESSAGES/moodserver.mo'],
+		'targets': ['moodserver/dist/*.whl'],
+		'clean': [lambda: shutil.rmtree('moodserver/dist'), lambda: shutil.rmtree('moodserver/build'), lambda: shutil.rmtree('moodserver/MoodServer.egg-info')],
+		}
+
+def task_whlclient():
+	"""Make client wheel"""
+	return {
+		'actions': ['python3 -m build -n -w moodclient'],
+		'file_dep': ['moodclient/pyproject.toml'],
+		'targets': ['moodclient/dist/*.whl'],
+		'clean': [lambda: shutil.rmtree('moodclient/dist'), lambda: shutil.rmtree('moodclient/build'), lambda: shutil.rmtree('moodclient/MoodClient.egg-info')],
+		}
+
+def task_wheels():
+	"""Make wheels"""
+	return {
+		'actions': None,
+		'task_dep': ['whlserver', 'whlclient'],
+		}

@@ -1,7 +1,7 @@
 Server technical documentation
 ==============================
 
-.. automodule:: moodserver.server
+.. automodule:: moodserver.moodserver.server
    :members:
    :private-members:
 
