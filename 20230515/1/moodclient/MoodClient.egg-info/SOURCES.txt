@@ -1,9 +1,0 @@
-pyproject.toml
-MoodClient.egg-info/PKG-INFO
-MoodClient.egg-info/SOURCES.txt
-MoodClient.egg-info/dependency_links.txt
-MoodClient.egg-info/entry_points.txt
-MoodClient.egg-info/requires.txt
-MoodClient.egg-info/top_level.txt
-moodclient/__main__.py
-moodclient/client.py

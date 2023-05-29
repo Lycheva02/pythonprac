@@ -37,7 +37,7 @@ def task_test():
 		'actions':['python3 -m unittest -v test_game.py'],
 		'file_dep': ['test_game.py'],
 		'task_dep': ['i18n'],
-		'clean': True,
+		#'clean': True,
 		}
 
 def task_html():
@@ -73,4 +73,6 @@ def task_wheels():
 	return {
 		'actions': None,
 		'task_dep': ['whlserver', 'whlclient'],
+		'clean': [lambda: shutil.rmtree('moodclient/dist'), lambda: shutil.rmtree('moodclient/build'), lambda: shutil.rmtree('moodclient/MoodClient.egg-info'),
+		lambda: shutil.rmtree('moodserver/dist'), lambda: shutil.rmtree('moodserver/build'), lambda: shutil.rmtree('moodserver/MoodServer.egg-info')],
 		}
